@@ -1,0 +1,188 @@
+Total params needed for Auth:
+----------------------------------------------------------
+parameter                        	strategies that use it
+----------------------------------------------------------
+api_key_location                 	API Key
+api_key_name                     	API Key
+api_key_value                    	API Key
+audience                         	OAuth2 Client Credentials, OAuth2 Authorization Code, OAuth2 Password
+auth_method                      	All
+
+auth_url                         	OAuth2 Authorization Code
+base_url                         	All
+bearer_token                     	Bearer Token
+
+client_id                        	OAuth2 Client Credentials, OAuth2 Authorization Code, OAuth2 Password
+client_key_password              	mTLS
+client_secret                    	OAuth2 Client Credentials, OAuth2 Authorization Code, OAuth2 Password
+default_headers                  	All
+
+default_query_params             	All
+log_level                        	All
+password                         	Basic, OAuth2 Password, Custom Login JWT
+redirect_url                     	OAuth2 Authorization Code
+redact_fields                    	All
+
+retry_backoff_ms                 	All
+retry_backoff_type               	All
+retry_enabled                    	All
+retry_max                        	All
+retry_status_codes               	All
+
+scope                            	OAuth2 Client Credentials, OAuth2 Authorization Code, OAuth2 Authorization Code
+timeout_connect_ms               	All
+timeout_read_ms                  	All
+tls_verify                       	All
+
+token_header_name                	Bearer Token, OAuth2 Client Credentials, OAuth2 Authorization Code, OAuth2 Password, Custom Login JWT
+token_prefix                     	Bearer Token, OAuth2 Client Credentials, OAuth2 Authorization Code, OAuth2 Password, Custom Login JWT
+token_request_body_type          	OAuth2 Client Credentials, OAuth2 Password, Custom Login JWT
+token_response_expiry_field      	OAuth2 Client Credentials, OAuth2 Authorization Code, OAuth2 Password, Custom Login JWT
+token_response_token_field       	OAuth2 Client Credentials, OAuth2 Authorization Code, OAuth2 Password, Custom Login JWT
+token_url                        	OAuth2 Client Credentials, OAuth2 Authorization Code, OAuth2 Password, Custom Login JWT
+
+use_pkce                          
+username                         	Basic, OAuth2 Password, Custom Login JWT
+
+2) Common parameters (always available)
+
+Base URL
+	•	Text
+
+Default headers
+	•	Key/value list (repeating)
+
+Default query params
+	•	Key/value list (repeating)
+
+Timeouts
+	•	Connect timeout (ms)
+	•	Read timeout (ms)
+
+TLS/SSL
+	•	Verify TLS cert (checkbox)
+	•	Allow insecure TLS (checkbox) optional; hide behind “Advanced”
+
+Retry policy
+	•	Enable retries (checkbox)
+	•	Max retries (int)
+	•	Retry on status codes (list)
+	•	Retry on network errors (checkbox)
+	•	Backoff: fixed/exp (dropdown) + base delay (ms)
+
+Logging
+	•	Log request/response metadata (checkbox)
+	•	Log headers (checkbox)
+	•	Log body (checkbox, default off)
+	•	Redact headers (list; default includes Authorization)
+
+3) Auth-specific parameters
+
+A) None
+	•	No extra fields
+
+B) Basic
+	•	Username
+	•	Password (secret)
+	•	Send as: Authorization: Basic … (fixed)
+
+C) API Key
+	•	Placement (dropdown): Header / Query
+	•	Key name (e.g. x-api-key)
+	•	Key value (secret)
+
+D) Bearer Token (static)
+	•	Token value (secret)
+	•	Header name (default Authorization)
+	•	Prefix (default Bearer)
+
+E) OAuth2 Client Credentials
+	•	Token URL
+	•	Client ID
+	•	Client Secret (secret) (or “Private key JWT” / “mTLS” as advanced variants)
+	•	Scopes (space-separated)
+	•	Audience / resource (optional)
+	•	Token auth method (dropdown): client_secret_basic / client_secret_post
+	•	Token caching enabled (checkbox)
+	•	Token refresh skew (seconds) (e.g. 30)
+
+F) OAuth2 Authorization Code (+PKCE)
+	•	Authorization URL
+	•	Token URL
+	•	Client ID
+	•	Redirect URI
+	•	Scopes
+	•	Use PKCE (checkbox, default on)
+	•	Store/Reuse refresh token (checkbox)
+	•	Local callback listener (checkbox + port) or “Paste code manually” mode
+
+G) OAuth2 Password (legacy)
+	•	Token URL
+	•	Client ID (optional depending on server)
+	•	Client Secret (optional)
+	•	Username
+	•	Password (secret)
+	•	Scopes (optional)
+
+H) Custom “Login endpoint returns JWT”
+	•	Login URL
+	•	HTTP method (POST usually)
+  •	Optional HTTP Body to send, using Substitution Text or JavaScript block
+	•	Body type (dropdown): JSON / Form / Custom
+	•	Credential fields mapping (key names for username/password/client_id/etc.)
+	•	Response JSONPath for token (e.g. $.access_token)
+	•	Token header name + prefix
+	•	Token caching enabled + expiry JSONPath (optional)
+
+I) mTLS
+	•	(Optionally) also require OAuth2 on top (checkbox: “Use with OAuth token request”)
+
+⸻
+
+4) Code structure: treat auth as a strategy that produces headers
+
+Core rule: the REST call code should not contain auth branching everywhere.
+Instead:
+	•	Build RequestContext (url, method, headers, params, body).
+	•	Apply AuthStrategy.apply(context) → adds headers/params (and can fetch tokens).
+	•	Send HTTP request.
+	•	Handle retries.
+	•	Parse response.
+
+⸻
+
+5) Token handling rules (OAuth/custom JWT)
+
+Token cache
+	•	Cache per auth configuration key (token URL + client_id + scopes + audience + username if relevant).
+	•	Store: access_token, expires_at, refresh_token (optional).
+
+When sending requests
+	•	If auth needs token:
+	•	If cached token valid (now < expires_at - skew): use it
+	•	Else refresh:
+	•	If refresh_token supported and present: refresh
+	•	Else fetch new token
+	•	If request returns 401/invalid_token once: clear cache and retry once
+
+Concurrency
+	•	Lock per token-cache key so 20 threads don’t all fetch a token at once.
+
+⸻
+
+6) Request building rules
+	•	Merge headers in this order:
+	1.	Connector defaults
+	2.	Auth-added headers
+	3.	Per-request overrides (highest priority)
+	•	Never log secrets; always redact configured headers/fields.
+	•	Support idempotency key (optional): checkbox + header name + auto-generate.
+
+⸻
+
+7) Minimal “Advanced” checkboxes worth adding (high value)
+	•	“Send token request as form-urlencoded” (checkbox) vs JSON
+	•	“Custom token header name/prefix”
+	•	“Treat 201/204 as success” (checkbox) + configurable success codes
+	•	“Follow redirects” (checkbox)
+	•	“Proxy” (checkbox + host/port + optional auth)

@@ -1,0 +1,53 @@
+o Case of fields is always correct, based on spelling in schema
+o After a connector retrieves the schema and parses it, the parsed object is caches in the server's Java Server.
+    Max age of cache based on an Advanced connector parameter
+o The when fetching Endpoints in the Configuration tab:
+    - the dropdown is set to the path alphabetically closest (greater) than the value entered in the parameter
+    - the dropdown does not contain the versions of the path with /{item id}
+o Special mapping needed for arrays of objects
+    Due to TDI's .toJSON and .fromJSON functionality based on it's DOM model for hierarchical Entries
+    So if you want to create this payload:
+            {
+                "typeInfo": "Account",
+                "ruleType": "CATEGORY_TYPE",
+                "schedules": [
+                    {
+                    "dayOfWeek": 0,
+                    "hour": 12,
+                    "month": 0,
+                    "dayOfMonth": -1,
+                    "minute": 0
+                    }
+                ],
+                "_attributes": {
+                    "OperationName": "suspend",
+                    "Filter": "(cn=*)",
+                    "name": "Suspend Dormant Account LCR",
+                    "description": "LCR to suspend dormant accounts"
+                }
+            }
+    then the schedules Attribute Map script should like like this:
+            var schedules = {
+                    schedules: [
+                                    {
+                                        dayOfWeek: 0,
+                                        hour: 12,
+                                        month: 0,
+                                        dayOfMonth: -1,
+                                        minute: 0
+                                    }
+                                ]
+            }
+
+        work.fromJSON(toJson(schedules)).schedules;
+o The connector will throw exceptions for modes not supported by the Endpoint
+o The /people endpoint has the oneOf keyword specifying two possible schema for PUT.
+    One for general modifications, one for suspend/restore
+    The connector has no special handling, but manages to find and use the right schema for Update
+o 
+
+---- ISSUES DETECTED
+
+/assignments GET
+    Error: "javax.ejb.EJBException: See nested exception; nested exception is: java.lang.NullPointerException"],"key":"com.ibm.isim.rest.server.INTERNAL_ERROR","text":"CTGIMZ001E An internal server error occurred while performing the task.\nThe error is \"javax.ejb.EJBException: See nested exception; nested exception is: java.lang.NullPointerException\" ","id":"CTGIMZ001","severity":"E"
+

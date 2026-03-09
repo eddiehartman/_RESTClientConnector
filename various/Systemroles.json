@@ -1,0 +1,22 @@
+{      "erlabel": "Working with Franz",      "description": "Having fun",      "errolename": "AdminRole",      "description": "Role with administrative privileges",      "ersystemrolecategory": 1  }
+
+{
+    "erlabel": "Working with Franz",
+    "description": "Having fun",
+    "errolename": "AdminRole",
+    "description": "Role with administrative privileges",
+    "ersystemrolecategory": 1,
+}
+1;erglobalid=2667559992953861342,ou=services,erglobalid=00000000000000000000,ou=demo,dc=ivig2667559992953861342,ou=services,erglobalid=00000000000000000000,ou=demo,dc=ivig
+1;erglobalid=ZXJnbG9iYWxpZD0vN¡YЗNTU5OTkvOTUzODVxMzQvLG91PXNIсnZpY2VzLGVvZ2xvVmFsaWO9MDAwMDAwMDAwMDAwMDAwMDAwMDAsb3U9ZGVtbvxkYz1pdmIn
+
+From SWAGGER:
+{
+  "_attributes": {
+    "errolename": "AdminRole",
+    "description": "Role with administrative privileges",
+    "ersystemrolecategory": 1,
+    "uuid": "123e4567-e89b-12d3-a456-426614174000"
+  },
+  "erparent": "123e4567-e89b-12d3-a456-426614174000"
+} 
