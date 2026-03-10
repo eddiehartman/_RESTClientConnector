@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><MetamergeConfig IDIversion="Created by SDI7.2 - 2024-09-23" created="Sun Mar 08 15:17:05 CET 2026" createdBy="eddiehartman" modified="Tue Mar 10 14:17:42 CET 2026" modifiedBy="eddiehartman" version="7.1.1">
+<?xml version="1.0" encoding="UTF-8"?><MetamergeConfig IDIversion="Created by SDI7.2 - 2024-09-23" created="Sun Mar 08 15:17:05 CET 2026" createdBy="eddiehartman" modified="Tue Mar 10 14:36:33 CET 2026" modifiedBy="eddiehartman" version="7.1.1">
     <Folder name="AssemblyLines">
         <AssemblyLine name="_allTestsRun">
             <ModTime>1772654341400</ModTime>
@@ -5871,15 +5871,15 @@ task.logmsg((e == null) ? "* no data *" : e)]]></parameter>
         </Connector>
         <Connector name="RESTClientConnector">
             <InheritFrom>system:/Connectors/ibmdi.ScriptConnector</InheritFrom>
-            <ModTime>1773148662371</ModTime>
+            <ModTime>1773149785650</ModTime>
             <ConnectorMode>Iterator</ConnectorMode>
             <ConnectorState>Enabled</ConnectorState>
             <Configuration>
                 <InheritFrom>[parent]</InheritFrom>
-                <ModTime>1773148662371</ModTime>
-                <parameter name="$form$"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><MetamergeConfig Cycle="386" UUID="cfa9bd18-a2f6-4453-9c74-0b356b1bd594" created="Tue Feb 17 10:28:46 CET 2026" createdBy="eddiehartman" main="Form" modified="Tue Mar 10 14:17:42 CET 2026" modifiedBy="eddiehartman" version="7.1.1">
+                <ModTime>1773149785650</ModTime>
+                <parameter name="$form$"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><MetamergeConfig Cycle="402" UUID="cfa9bd18-a2f6-4453-9c74-0b356b1bd594" created="Tue Feb 17 10:28:46 CET 2026" createdBy="eddiehartman" main="Form" modified="Tue Mar 10 14:36:25 CET 2026" modifiedBy="eddiehartman" version="7.1.1">
     <Form name="Form">
-        <ModTime>1773148660369</ModTime>
+        <ModTime>1773149783555</ModTime>
         <FormItemNames>
             <ListItem>$GLOBAL.script</ListItem>
             <ListItem>$GLOBAL.includeFiles</ListItem>
@@ -5947,13 +5947,15 @@ task.logmsg((e == null) ? "* no data *" : e)]]></parameter>
             <parameter name="syntax">textarea</parameter>
         </FormItem>
         <FormItem name="action">
-            <ModTime>1771850397809</ModTime>
+            <ModTime>1773149276442</ModTime>
             <parameter name="description">The list of modes supported for this Endpoint</parameter>
             <parameter name="label">Supported Modes</parameter>
+            <parameter name="script">fetchActions</parameter>
+            <parameter name="scriptLabel">Fetch</parameter>
             <parameter name="syntax">string</parameter>
         </FormItem>
         <FormItem name="api_key_location">
-            <ModTime>1773062816925</ModTime>
+            <ModTime>1773148862697</ModTime>
             <Values>
                 <ListItem>Header</ListItem>
                 <ListItem>Query String Parameter</ListItem>
@@ -5977,7 +5979,7 @@ task.logmsg((e == null) ? "* no data *" : e)]]></parameter>
             <parameter name="label">Audience / Resource</parameter>
         </FormItem>
         <FormItem name="auth_method">
-            <ModTime>1773062816857</ModTime>
+            <ModTime>1773148862635</ModTime>
             <Values>
                 <ListItem>None</ListItem>
                 <ListItem>Basic</ListItem>
@@ -6110,7 +6112,7 @@ task.logmsg((e == null) ? "* no data *" : e)]]></parameter>
             <parameter name="syntax">password</parameter>
         </FormItem>
         <FormItem name="oauth2_token_auth_method">
-            <ModTime>1773062816968</ModTime>
+            <ModTime>1773148862732</ModTime>
             <Values>
                 <ListItem>none (public client)</ListItem>
                 <ListItem>Client Secret Basic</ListItem>
@@ -6180,7 +6182,7 @@ task.logmsg((e == null) ? "* no data *" : e)]]></parameter>
             <parameter name="scriptLabel">Refresh</parameter>
         </FormItem>
         <FormItem name="scope">
-            <ModTime>1773062816940</ModTime>
+            <ModTime>1773148862707</ModTime>
             <Values>
                 <ListItem>OAuth2 Client Credentials</ListItem>
                 <ListItem>OAuth2 Authorization Code</ListItem>
@@ -6334,8 +6336,8 @@ task.logmsg((e == null) ? "* no data *" : e)]]></parameter>
         <parameter name="api_key_location">Header</parameter>
         <parameter name="auth_method">OAuth 2.0</parameter>
         <parameter name="client_id">444</parameter>
-        <parameter encrypted="true" name="client_key_password">iUVPchbQ9AMN0nHPQL7bgH3ruWtlWYhDQStBDg+rD2SmajypVXFHq8csHeWL7mR3iqA0yUeUxkeZ1QQJpJe289tzyXaKANgMxStTB84HTCo2+Dhy8Swd61kqM+i+lVa3N8myEKa/ZMP+PLvmR0RLVocuz537SaLDrf/w7Mik6RU=</parameter>
-        <parameter encrypted="true" name="client_secret">iulXBgaiMgGmAlzsuH3UJD7EkCxobW1uWQiYfydPiE3oIFIH47NPmKprP6SrVT2bL69vr0SHGv0LDLC/ItGNX9UNwvOJAJpM0rhl79RXPUJOZ2aJBJfC9WatrkbhurK8CZGl6IV1PC13/58jBG0w0z7Q2PF8NZePx7EWAwaCz50=</parameter>
+        <parameter encrypted="true" name="client_key_password">SMJU4Afh4ukwo0Ke9H5q37BzGCTApv6IfNPsL7E3XKD6mSOsExcamjG9g3AAY7g+EfpV7qkRqnutcW5XPFIRzZLaaJ75qIzLHiAuGihBqNLXlsjSs+Ss9bS9I2VTtsS/rZjDkP+lbvMaJR7Na6ThKgxiRw80aTUmGkGaItw45JM=</parameter>
+        <parameter encrypted="true" name="client_secret">V3eQW0Sc8UxEl2VnBFxHlu4f5kHazPyavC+kvVq53WhoRHseyC+fXuni/tmRDNCBGYttso3AFi7ePmiLcR/jRmNJdPSYxyKeCm8fVFFIxHOnecTjxW3MpFsYcnK7zibLAxy63tV+I8HDsWHfkVXDEPk1asbQ7PAJGHtVmgK5FVw=</parameter>
         <parameter name="formscript"><![CDATA[// 20250104 1959 Initial
 // ...
 // 20260130 1436 Removed main.logmsg() debug messages
@@ -6351,7 +6353,7 @@ task.logmsg((e == null) ? "* no data *" : e)]]></parameter>
 // 20260229 1535 Now for API Key
 // 20260229 2051 Bearer Token working...?
 // 20260301 1000 Bearer Token working!
-// 20260310 1410 Working on CCs issue
+// 20260310 1436 Fixed the issue when there are no context roots
 //
 //						GLOBAL VARIABLES
 //
@@ -6426,7 +6428,7 @@ function debug() {
 }
 
 function alert(msg) {
-	//main.logmsg(msg);
+	main.logmsg(msg);
 	//java.lang.System.out.println(msg);
 }
 
@@ -6596,7 +6598,7 @@ function fetchEndpoints() {
 		[path],
 		"Cannot fetch actions for selected Endpoint");
 
-	fetchActions();
+	//fetchActions();
 }
 
 // Once a path is selected, update the other dropdowns
@@ -6632,8 +6634,10 @@ function modeBasedAction() {
 function fetchServers(selectedPath) {
 	initialize();
 
-	selectedPath = selectedPath || form.getControl("path").getText();
+	alert(">> fetchServers for " + selectedPath);
 
+	selectedPath = selectedPath;
+	
 	updateDropdown("contextRoot",
 		["paths", selectedPath, "servers"],
 		"Cannot fetch servers for selected Endpoint");
@@ -6780,7 +6784,8 @@ function updateTextBox(controlName, paramsArray) {
 // Update dropdown based on API
 function updateDropdown(controlName, path, errorMsg) {
 	var ndx;
-
+	alert(">> updateDropdown: " + controlName 
+			+ "  path: " + path)
 	try {
 		initialize();
 
@@ -6792,6 +6797,10 @@ function updateDropdown(controlName, path, errorMsg) {
 		var subtree = __schema.getChildren(path);
 
 		if (subtree == null) {
+			if (controlName == "contextRoot") {
+				return
+			}
+			// Otherwise it's an error	
 			path.shift();
 			form.alert("Invalid Endpoint Path: " + path.toString());
 			return;
@@ -6807,8 +6816,9 @@ function updateDropdown(controlName, path, errorMsg) {
 
 	// Get the current value and set the selection point if it matches a path
 	var currentValue = (combo.getText() || "").trim();
-	
-//	main.logmsg("Removing all from combo: " + controlName);
+
+	alert(">> current value: " + currentValue);
+//	alert("Removing all from combo: " + controlName);
 	combo.removeAll(); // Empty drop-down
 
 	// Now to sort these alphabetically
@@ -6859,7 +6869,7 @@ function updateDropdown(controlName, path, errorMsg) {
 	pos = (pos < sortedArray.length) ? pos : 0;
 	combo.select(pos);
 
-	//main.logmsg("UpdateDropdown set to position " + pos);
+	//alert("UpdateDropdown set to position " + pos);
 }
 
 // Empty out both Item and Object dropdowns
@@ -7026,7 +7036,7 @@ function setVisible(controlName, enableIt) {
 	if (typeof(enableIt) == "undefined") enableIt = true;
 	var verb = enableIt ? "ENABLING" : "disabling"
 	
-	//main.logmsg("---> " + verb + ": " + controlName);
+	//alert("---> " + verb + ": " + controlName);
 	
 	var control = form.getControl(controlName);
 	control.setVisible(enableIt);
@@ -7034,7 +7044,7 @@ function setVisible(controlName, enableIt) {
 	return; // Skip the rest for now
 	for (var child in children) {
 		if (child.toString().startsWith("Label")) {
-			//main.logmsg(">" + verb + " " + child.toString() + " <" + child.getText() + "> " + child.getClass());
+			//alert(">" + verb + " " + child.toString() + " <" + child.getText() + "> " + child.getClass());
 			child.setVisible(enableIt);
 		}
 	}
@@ -7042,7 +7052,7 @@ function setVisible(controlName, enableIt) {
 
 // Make all parameters fields invisible (org.eclipse.swt.widgets.Control)
 function disableAllControls() {
-	//main.logmsg("Form: " + form.getClass())
+	//alert("Form: " + form.getClass())
 	
 	for (var controlName in __allControls) {
 		var control = form.getControl(controlName);		
@@ -7063,7 +7073,7 @@ function selectScope() {
 	form.getControl("scope").select(scope);
 	var enableSet = __oauth2Parameters[scope];
 	
-	//main.logmsg("Enabling for scope: " + form.getControl("scope").getText());
+	//alert("Enabling for scope: " + form.getControl("scope").getText());
 	for (var controlName in enableSet) {
 		setVisible(controlName, true)
 	}
@@ -7079,12 +7089,13 @@ function selectScope() {
         <parameter name="url">https://192.168.252.3:30943</parameter>
     </Form>
 </MetamergeConfig>]]></parameter>
-                <parameter name="action"/>
+                <parameter name="action">Iterator,Lookup</parameter>
                 <parameter name="auth_method"/>
+                <parameter name="bearer_token">special-key</parameter>
                 <parameter name="contextRoot"/>
                 <parameter name="max_cache_age">24</parameter>
-                <parameter name="path"/>
-                <parameter name="schema"/>
+                <parameter name="path">/transactions</parameter>
+                <parameter name="schema">https://backend.sutti.app/api/openapi.yaml</parameter>
                 <parameter name="scope">OAuth2 Password</parameter>
                 <parameter name="script"><![CDATA[// 20250104 2008 Initial
 // ...
@@ -8465,7 +8476,7 @@ function findEntry(searchCriteria) {
 		throw ex
 	}
 }]]></parameter>
-                <parameter name="url"/>
+                <parameter name="url">https://backend.sutti.app/</parameter>
             </Configuration>
             <Parser>
                 <InheritFrom>[parent]</InheritFrom>
