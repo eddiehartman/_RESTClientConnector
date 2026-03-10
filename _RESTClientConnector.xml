@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><MetamergeConfig IDIversion="Created by SDI7.2 - 2024-09-23" created="Sun Mar 08 15:17:05 CET 2026" createdBy="eddiehartman" modified="Tue Mar 10 14:36:33 CET 2026" modifiedBy="eddiehartman" version="7.1.1">
+<?xml version="1.0" encoding="UTF-8"?><MetamergeConfig IDIversion="Created by SDI7.2 - 2024-09-23" created="Sun Mar 08 15:17:05 CET 2026" createdBy="eddiehartman" modified="Tue Mar 10 15:14:44 CET 2026" modifiedBy="eddiehartman" version="7.1.1">
     <Folder name="AssemblyLines">
         <AssemblyLine name="_allTestsRun">
             <ModTime>1772654341400</ModTime>
@@ -72,7 +72,7 @@ do {
             </InitParams>
         </AssemblyLine>
         <AssemblyLine name="_testAPIs">
-            <ModTime>1773148150944</ModTime>
+            <ModTime>1773149927344</ModTime>
             <Settings>
                 <parameter name="ALPoolSettingsDialog">showALPoolSettings</parameter>
                 <parameter name="automapattributes">false</parameter>
@@ -95,19 +95,19 @@ SCHEMA class]]></parameter>
             <LogConfig/>
             <ContainerEF name="EntryFeedContainer"/>
             <ContainerDF name="DataFlowContainer">
-                <ModTime>1773148150944</ModTime>
+                <ModTime>1773149927344</ModTime>
                 <Connector name="RESTClientConnector">
                     <InheritFrom>/Connectors/RESTClientConnector</InheritFrom>
-                    <ModTime>1773148150944</ModTime>
+                    <ModTime>1773149927344</ModTime>
                     <ConnectorMode>Iterator</ConnectorMode>
                     <ConnectorState>Enabled</ConnectorState>
                     <Configuration>
                         <InheritFrom>[parent]</InheritFrom>
-                        <ModTime>1773148150944</ModTime>
-                        <parameter name="action">Iterator,Lookup,AddOnly</parameter>
+                        <ModTime>1773149927344</ModTime>
+                        <parameter name="action">Iterator,Lookup,Update,AddOnly</parameter>
                         <parameter name="auth_method">Bearer Token</parameter>
                         <parameter name="bearer_token">secret-token</parameter>
-                        <parameter name="path">/bo/attendance</parameter>
+                        <parameter name="path">/bo/farmers</parameter>
                         <parameter name="schema">https://backend.sutti.app/api/openapi.yaml</parameter>
                         <parameter name="url">https://backend.sutti.app/</parameter>
                     </Configuration>
@@ -2688,7 +2688,7 @@ SCHEMA class]]></parameter>
             </InitParams>
         </AssemblyLine>
         <AssemblyLine name="_testScriptConnectorCode">
-            <ModTime>1773148364384</ModTime>
+            <ModTime>1773151913536</ModTime>
             <Settings>
                 <parameter name="ALPoolSettingsDialog">showALPoolSettings</parameter>
                 <parameter name="automapattributes">false</parameter>
@@ -2720,10 +2720,10 @@ SCHEMA class]]></parameter>
             <LogConfig/>
             <ContainerEF name="EntryFeedContainer"/>
             <ContainerDF name="DataFlowContainer">
-                <ModTime>1773148364384</ModTime>
+                <ModTime>1773151913536</ModTime>
                 <Script name="Set which type of test">
-                    <ModTime>1773062849676</ModTime>
-                    <parameter name="script">testingFormScript = true; // Which Branch to execute (Form or Connector)</parameter>
+                    <ModTime>1773150046686</ModTime>
+                    <parameter name="script">testingFormScript = false; // Which Branch to execute (Form or Connector)</parameter>
                 </Script>
                 <ALMap name="Params_petstore">
                     <InheritFrom>[no inheritance]</InheritFrom>
@@ -2816,10 +2816,10 @@ SCHEMA class]]></parameter>
                 </ALMap>
                 <ALMap name="Params_CC">
                     <InheritFrom>[no inheritance]</InheritFrom>
-                    <ModTime>1773148364384</ModTime>
+                    <ModTime>1773151913536</ModTime>
                     <AttributeMap name="Input">
                         <InheritFrom>[parent]</InheritFrom>
-                        <ModTime>1773148364384</ModTime>
+                        <ModTime>1773151913536</ModTime>
                         <AttributeMapItem>
                             <Name>auth_method</Name>
                             <Type>advanced</Type>
@@ -2840,6 +2840,11 @@ SCHEMA class]]></parameter>
                             <Add>true</Add>
                             <Modify>true</Modify>
                             <Script>"/api/v3"</Script>
+                        </AttributeMapItem>
+                        <AttributeMapItem>
+                            <Name>path</Name>
+                            <Type>advanced</Type>
+                            <Script>"/users"</Script>
                         </AttributeMapItem>
                         <AttributeMapItem>
                             <Name>schema</Name>
@@ -4245,9 +4250,9 @@ i = 42;]]></parameter>
                     <Type>0</Type>
                 </Branch>
                 <Branch name="Testing Connector Script">
-                    <ModTime>1773062538576</ModTime>
+                    <ModTime>1773150041591</ModTime>
                     <Script name="Connector Script">
-                        <ModTime>1773062131648</ModTime>
+                        <ModTime>1773150041591</ModTime>
                         <parameter name="enabled">true</parameter>
                         <parameter name="script"><![CDATA[// 20250104 2008 Initial
 // ...
@@ -4819,7 +4824,7 @@ function parseSchema() {
 function refreshParameters() {
 	var path = connector.getParam("path");
 	if (!path) throw new java.lang.RuntimeException(
-		"Path parameter has not been set for Connector: " + task.getShortName() + "/" + connector.getName()
+		"Path parameter has not been set for Connector: " + connector.getName()
 	);
 
 	__parameters = {};
@@ -5871,15 +5876,15 @@ task.logmsg((e == null) ? "* no data *" : e)]]></parameter>
         </Connector>
         <Connector name="RESTClientConnector">
             <InheritFrom>system:/Connectors/ibmdi.ScriptConnector</InheritFrom>
-            <ModTime>1773149785650</ModTime>
+            <ModTime>1773150150773</ModTime>
             <ConnectorMode>Iterator</ConnectorMode>
             <ConnectorState>Enabled</ConnectorState>
             <Configuration>
                 <InheritFrom>[parent]</InheritFrom>
-                <ModTime>1773149785650</ModTime>
-                <parameter name="$form$"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><MetamergeConfig Cycle="402" UUID="cfa9bd18-a2f6-4453-9c74-0b356b1bd594" created="Tue Feb 17 10:28:46 CET 2026" createdBy="eddiehartman" main="Form" modified="Tue Mar 10 14:36:25 CET 2026" modifiedBy="eddiehartman" version="7.1.1">
+                <ModTime>1773150150773</ModTime>
+                <parameter name="$form$"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><MetamergeConfig Cycle="403" UUID="cfa9bd18-a2f6-4453-9c74-0b356b1bd594" created="Tue Feb 17 10:28:46 CET 2026" createdBy="eddiehartman" main="Form" modified="Tue Mar 10 14:42:30 CET 2026" modifiedBy="eddiehartman" version="7.1.1">
     <Form name="Form">
-        <ModTime>1773149783555</ModTime>
+        <ModTime>1773150150420</ModTime>
         <FormItemNames>
             <ListItem>$GLOBAL.script</ListItem>
             <ListItem>$GLOBAL.includeFiles</ListItem>
@@ -6336,8 +6341,8 @@ task.logmsg((e == null) ? "* no data *" : e)]]></parameter>
         <parameter name="api_key_location">Header</parameter>
         <parameter name="auth_method">OAuth 2.0</parameter>
         <parameter name="client_id">444</parameter>
-        <parameter encrypted="true" name="client_key_password">SMJU4Afh4ukwo0Ke9H5q37BzGCTApv6IfNPsL7E3XKD6mSOsExcamjG9g3AAY7g+EfpV7qkRqnutcW5XPFIRzZLaaJ75qIzLHiAuGihBqNLXlsjSs+Ss9bS9I2VTtsS/rZjDkP+lbvMaJR7Na6ThKgxiRw80aTUmGkGaItw45JM=</parameter>
-        <parameter encrypted="true" name="client_secret">V3eQW0Sc8UxEl2VnBFxHlu4f5kHazPyavC+kvVq53WhoRHseyC+fXuni/tmRDNCBGYttso3AFi7ePmiLcR/jRmNJdPSYxyKeCm8fVFFIxHOnecTjxW3MpFsYcnK7zibLAxy63tV+I8HDsWHfkVXDEPk1asbQ7PAJGHtVmgK5FVw=</parameter>
+        <parameter encrypted="true" name="client_key_password">esa1pWpZwitJ5iQI7zr5wObqGMapZYakQarGhbXJAoENzecRXZNt2n9oFuI5GHG3yd2AeASZrqIMnsuOl9vL1sJ/Mj8PqDTJD6KOAXMwKhi0FODfTEgdhCD/9U+UsGo7piGWn6+JKNPePqJn0bPxbEn2SgUJAPlDe5o//crX+1w=</parameter>
+        <parameter encrypted="true" name="client_secret">JSJ3kTyDh0GSg5LnBQCS3ECMMKobSJAxLJ0mxxM2cFX4MZDSC04gB2vfSBzRUNgf75MbqBKReQuB2rCPa5EhvxSHKjm7AxIhwYOwb1NP+sEAhe236U814DQgwpl4wpKfuAIhVmx8IvQkKG0F10C1as9d9s+bGB+E8giAT2Uzp0E=</parameter>
         <parameter name="formscript"><![CDATA[// 20250104 1959 Initial
 // ...
 // 20260130 1436 Removed main.logmsg() debug messages
@@ -6428,7 +6433,7 @@ function debug() {
 }
 
 function alert(msg) {
-	main.logmsg(msg);
+	//main.logmsg(msg);
 	//java.lang.System.out.println(msg);
 }
 
@@ -7089,12 +7094,12 @@ function selectScope() {
         <parameter name="url">https://192.168.252.3:30943</parameter>
     </Form>
 </MetamergeConfig>]]></parameter>
-                <parameter name="action">Iterator,Lookup</parameter>
+                <parameter name="action">Iterator,Lookup,Update,AddOnly</parameter>
                 <parameter name="auth_method"/>
                 <parameter name="bearer_token">special-key</parameter>
                 <parameter name="contextRoot"/>
                 <parameter name="max_cache_age">24</parameter>
-                <parameter name="path">/transactions</parameter>
+                <parameter name="path">/bo/farmers</parameter>
                 <parameter name="schema">https://backend.sutti.app/api/openapi.yaml</parameter>
                 <parameter name="scope">OAuth2 Password</parameter>
                 <parameter name="script"><![CDATA[// 20250104 2008 Initial
@@ -9430,7 +9435,7 @@ function RESTCLIENT(args) {
 }]]></parameter>
         </Script>
         <Script name="SCHEMA class">
-            <ModTime>1772654341513</ModTime>
+            <ModTime>1773152036442</ModTime>
             <parameter name="enabled">true</parameter>
             <parameter name="includeFiles"/>
             <parameter name="script"><![CDATA[// 20250121 1145 Change parseOpenAPIschema so the argument openApiSchema can be either JSON or JS object
@@ -9451,365 +9456,358 @@ function RESTCLIENT(args) {
 // 20251229 1539 Fixed getAcceptType and getContentType to deal with the funky, inconsistent schema
 // 20260101 1616 Got rid of potential runaway loops for getting Accept and Content Types
 // 20260107 1445 Changed the get*Type() functions to return null if nothing found
+// 20260310 1513 Corrected this.pathSupportsVerb by changing it to use .getChildren
 
 function SCHEMA(schema, format) {
-  _WHERE = "SCHEMA class";	/* Global variable available for error reporting */
-  this.name = "SCHEMA";
-  this.schemaObj = system.newEntry();
+	_WHERE = "SCHEMA class";	/* Global variable available for error reporting */
+	this.name = "SCHEMA";
+	this.schemaObj = system.newEntry();
 
-  /* Main init logic after method definitions
-  
-  The name says it all. Returns a JS Obj */
+	/* Main init logic after method definitions
+    
+	The name says it all. Returns a JS Obj */
 
-  this.parseOpenAPIschema = function (openApiSchema) {
-	try {
-	  if (typeof (openApiSchema) != "string") return openApiSchema;
+	this.parseOpenAPIschema = function (openApiSchema) {
+		try {
+			if (typeof (openApiSchema) != "string") return openApiSchema;
 
-	  openApiSchema = openApiSchema.trim();
-	  var jsonString = "";
+			openApiSchema = openApiSchema.trim();
+			var jsonString = "";
 
-	  /* Load Jackson libraries */
-	  var ObjectMapper = com.fasterxml.jackson.databind.ObjectMapper;
-	  var objectMapper = new ObjectMapper();
+			/* Load Jackson libraries */
+			var ObjectMapper = com.fasterxml.jackson.databind.ObjectMapper;
+			var objectMapper = new ObjectMapper();
 
-	  if (openApiSchema.startsWith("{") && (openApiSchema.endsWith("}") >= 0)) {
-		// overriding above arguments - for now
-		this.format = "JSON"
-	  } else {
-		this.format = "YAML"
-	  }
-
-	  /* Check if YAML and if so, convert to Json */
-	  if ("YAML".equalsIgnoreCase(this.format)) {
-		/* Use SnakeYAML to convert the YAML to a map that the ObjectMapper can read */
-		var Yaml = Packages.org.yaml.snakeyaml.Yaml;
-		/* Create instances of Yaml and ObjectMapper */
-		var yaml = new Yaml();
-		/* Parse YAML into a Java Map */
-		var map = yaml.load(openApiSchema);
-
-		/* Convert Java Map to JSON string */
-		jsonString = objectMapper.writeValueAsString(map)
-	  } else {
-		jsonString = openApiSchema;
-	  }
-
-	  // Now to read it into an Entry object so we get a DOM model with xpath
-	  var file = system.getConnector("ibmdi.FormEntryConnector");
-	  file.setParam("entryRawData", jsonString);
-	  var JSONParser = system.getParser("ibmdi.JSONParser");
-	  file.setParser(JSONParser);
-	  file.initialize(null);
-	  file.selectEntries();
-	  var schemaEntry = file.getNextEntry();
-
-	  this.schemaObj = schemaEntry;
-
-	  // For future convenience, we want to create a sorted Array of endpoint names
-	  var hmap = new java.util.HashMap();
-	  var nodelist = this.schemaObj.paths.getChildNodes(); // Entry/Attribute classes implement the DOM Interface
-	  var size = nodelist.getLength();
-	  for (var i = 0; i < size; i++) {
-		hmap.put(nodelist.item(i).getName(), true)
-	  }
-	  this.endpointPathArray = hmap.keySet().toArray();
-	  java.util.Arrays.sort(this.endpointPathArray);
-
-	  // And finally, create the handy endpointPathIterator object
-	  this.endpointPathIterator = this.makeEndpointPathArray(this.endpointPathArray)
-
-	  return this.schemaObj
-	} catch (ex) {
-	  throw "SCHEMA.parseSchema() - " + ex
-	}
-
-  }
-
-  /*
-  Parses the path and returns the name of the embedded UID attribute in the URL
-  */
-  this.getEmbeddedUID = function (path) {
-	var parts = system.splitString(path, "/");
-
-	for (var i = 0; i < parts.length; i++) {
-	  var part = parts[i].trim();
-	  if (part.startsWith("{") && part.endsWith("}")) {
-		// Found an embedded uid
-		return part.substring(1, part.length - 1)
-	  }
-	}
-	return null
-  }
-
-  /*
-  Replaces the uid placeholder in the URL path with the uid value passed
-  The criteria argument is either an Entry or a string value
-  */
-  this.replaceEmbeddedUID = function (path, criteria) {
-	var parts = system.splitString(path, "/");
-	var newPath = [parts[0]];
-
-	for (var i = 1; i < parts.length; i++) {
-	  var part = parts[i].trim();
-	  if (part.startsWith("{") && part.endsWith("}")) {
-		// Found an embedded uid
-		var embeddedUID = part.substring(1, part.length - 1);
-
-		// If criteria is an Entry then grab the attribute value, else use the parameter value itself
-		var uidValue = (criteria instanceof com.ibm.di.entry.Entry) ? entry[embeddedUID] : criteria;
-
-		if (!uidValue) {
-		  throw new java.lang.Exception("UID attribute not mapped out or is null: " + embeddedUID)
-		}
-		newPath.push(uidValue)
-	  } else {
-		newPath.push(part)
-	  }
-	}
-	return newPath.join("/")
-  }
-
-  /*
-  Uses .getChildren() to return the parameters array for the chosen path and action.
-  And it must return parameters for both /endpoint and /endpoint/{uid}
-  */
-  this.useEntry = system.newEntry();
-  this.getParameters = function (path, verb) {
-	var params = [];
-	var alreadyAdded = {};
-
-	verb = (verb || "").toLowerCase();
-	var endpointPath = this.endpointPathIterator.getFirst(path);
-	while (endpointPath != null && endpointPath.startsWith(path)) {
-	  if (endpointPath.equals(path) ||
-		(endpointPath.startsWith(path + "/{") && endpointPath.endsWith("}"))) {
-		var epParams = this.getChildren(["paths", endpointPath, verb, "parameters"]);
-
-		if (epParams != null) {
-		  var children = epParams.getChildNodes();
-		  for (var child in children) {
-			this.useEntry.parameters = child;
-			var jsonString = this.useEntry.toJSON();
-			jsonString = jsonString.substring(14); // Remove the Attribute name
-			var paramObj = fromJson(jsonString.substring(0, jsonString.length - 1)); // Create a JS object
-			if (!alreadyAdded[paramObj.name]) {
-			  params.push(paramObj); // Add it to the array of parameters to pass back
-			  alreadyAdded[paramObj.name] = true
+			if (openApiSchema.startsWith("{") && (openApiSchema.endsWith("}") >= 0)) {
+				// overriding above arguments - for now
+				this.format = "JSON"
+			} else {
+				this.format = "YAML"
 			}
-		  }
-		}
-	  }
 
-	  endpointPath = this.endpointPathIterator.getNext()
-	}
+			/* Check if YAML and if so, convert to Json */
+			if ("YAML".equalsIgnoreCase(this.format)) {
+				/* Use SnakeYAML to convert the YAML to a map that the ObjectMapper can read */
+				var Yaml = Packages.org.yaml.snakeyaml.Yaml;
+				/* Create instances of Yaml and ObjectMapper */
+				var yaml = new Yaml();
+				/* Parse YAML into a Java Map */
+				var map = yaml.load(openApiSchema);
 
-	return params
-  }
-
-  /*
-  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  * 
-  * 	Just like with parameters, we have to look for the path, also with {id} in the URI 
-  * 
-  *  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  * 
-  */
-  this.defaultType = function (path, verb) {
-	//    	if (path.toLowerCase().indexOf("rest/v")) {
-	//    		return "application/vnd.ibm.isim-v1+json"
-	//    	} else {
-	return "application/json"
-	//    	}		
-  }
-
-  this.getAcceptType = function (path, verb) {
-	verb = (verb || "").toLowerCase();
-
-	var endpointPath = this.endpointPathIterator.getFirst(path);
-
-	// If this is a write operation, then the path must include /{id}
-	if (verb == "put" || verb == "delete") {
-	  while (endpointPath != null && endpointPath.startsWith(path)
-		&& !(endpointPath.indexOf("/{") > 0 && endpointPath.endsWith("}"))) {
-		endpointPath = this.endpointPathIterator.getNext()
-	  }
-	}
-
-	// Now to look for responses for the various responseCodes			
-	while (endpointPath != null && endpointPath.startsWith(path)) {
-	  if (endpointPath.equals(path) ||
-		(endpointPath.startsWith(path + "/{") && endpointPath.endsWith("}"))) {
-		var responseCodes = this.getChildren([
-		  "paths", endpointPath, verb,
-		  "responses"
-		]);
-
-		if (responseCodes != null) {
-		  for (var code in responseCodes) {
-			if (code.content) {
-			  for (var contentType in code.content) {
-				return contentType.getName().replaceAll("\\\\", "")
-			  }
+				/* Convert Java Map to JSON string */
+				jsonString = objectMapper.writeValueAsString(map)
+			} else {
+				jsonString = openApiSchema;
 			}
-		  }
-		}
-	  }
 
-	   endpointPath = this.endpointPathIterator.getNext()
+			// Now to read it into an Entry object so we get a DOM model with xpath
+			var file = system.getConnector("ibmdi.FormEntryConnector");
+			file.setParam("entryRawData", jsonString);
+			var JSONParser = system.getParser("ibmdi.JSONParser");
+			file.setParser(JSONParser);
+			file.initialize(null);
+			file.selectEntries();
+			var schemaEntry = file.getNextEntry();
+
+			this.schemaObj = schemaEntry;
+
+			// For future convenience, we want to create a sorted Array of endpoint names
+			var hmap = new java.util.HashMap();
+			var nodelist = this.schemaObj.paths.getChildNodes(); // Entry/Attribute classes implement the DOM Interface
+			var size = nodelist.getLength();
+			for (var i = 0; i < size; i++) {
+				hmap.put(nodelist.item(i).getName(), true)
+			}
+			this.endpointPathArray = hmap.keySet().toArray();
+			java.util.Arrays.sort(this.endpointPathArray);
+
+			// And finally, create the handy endpointPathIterator object
+			this.endpointPathIterator = this.makeEndpointPathArray(this.endpointPathArray)
+
+			return this.schemaObj
+		} catch (ex) {
+			throw "SCHEMA.parseSchema() - " + ex
+		}
+
 	}
 
-	//throw "SCHEMA.getAcceptType() unable to find content type for " + path
-	return null
-  }
-
-  /*
-  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  * 
-  * 	Just like with parameters, we have to look for the path, also with {id} in the URI 
-  * 
-  *  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  * 
-  */
-  this.getContentType = function (path, verb) {
-	verb = (verb || "").toLowerCase();
-
-	var endpointPath = this.endpointPathIterator.getFirst(path);
-	while (endpointPath != null && endpointPath.startsWith(path)) {
-	  if (endpointPath.equals(path) ||
-		(endpointPath.startsWith(path + "/{") && endpointPath.endsWith("}"))) {
-		var content = this.getChildren([
-		  "paths", endpointPath, verb,
-		  "requestBody", "content"
-		]);
-
-		if (content != null) {
-		  for (var accept in content) {
-			return accept.getName()
-		  }
-		}
-	  }
-
-	  endpointPath = this.endpointPathIterator.getNext()
-	}
-
-	//throw "SCHEMA.getContentType() unable to find content type for " + path
-	return null
-  }
-
-  /* Returns the child elements (JS Obj) of the specified path
-	Root level if no argument or blank text passed. Always return a JS object
+	/*
+	Parses the path and returns the name of the embedded UID attribute in the URL
 	*/
+	this.getEmbeddedUID = function (path) {
+		var parts = system.splitString(path, "/");
+
+		for (var i = 0; i < parts.length; i++) {
+			var part = parts[i].trim();
+			if (part.startsWith("{") && part.endsWith("}")) {
+				// Found an embedded uid
+				return part.substring(1, part.length - 1)
+			}
+		}
+		return null
+	}
+
+	/*
+	Replaces the uid placeholder in the URL path with the uid value passed
+	The criteria argument is either an Entry or a string value
+	*/
+	this.replaceEmbeddedUID = function (path, criteria) {
+		var parts = system.splitString(path, "/");
+		var newPath = [parts[0]];
+
+		for (var i = 1; i < parts.length; i++) {
+			var part = parts[i].trim();
+			if (part.startsWith("{") && part.endsWith("}")) {
+				// Found an embedded uid
+				var embeddedUID = part.substring(1, part.length - 1);
+
+				// If criteria is an Entry then grab the attribute value, else use the parameter value itself
+				var uidValue = (criteria instanceof com.ibm.di.entry.Entry) ? entry[embeddedUID] : criteria;
+
+				if (!uidValue) {
+					throw new java.lang.Exception("UID attribute not mapped out or is null: " + embeddedUID)
+				}
+				newPath.push(uidValue)
+			} else {
+				newPath.push(part)
+			}
+		}
+		return newPath.join("/")
+	}
+
+	/*
+	Uses .getChildren() to return the parameters array for the chosen path and action.
+	And it must return parameters for both /endpoint and /endpoint/{uid}
+	*/
+	this.useEntry = system.newEntry();
+	this.getParameters = function (path, verb) {
+		var params = [];
+		var alreadyAdded = {};
+
+		verb = (verb || "").toLowerCase();
+		var endpointPath = this.endpointPathIterator.getFirst(path);
+		while (endpointPath != null && endpointPath.startsWith(path)) {
+			if (endpointPath.equals(path) ||
+				(endpointPath.startsWith(path + "/{") && endpointPath.endsWith("}"))) {
+				var epParams = this.getChildren(["paths", endpointPath, verb, "parameters"]);
+
+				if (epParams != null) {
+					var children = epParams.getChildNodes();
+					for (var child in children) {
+						this.useEntry.parameters = child;
+						var jsonString = this.useEntry.toJSON();
+						jsonString = jsonString.substring(14); // Remove the Attribute name
+						var paramObj = fromJson(jsonString.substring(0, jsonString.length - 1)); // Create a JS object
+						if (!alreadyAdded[paramObj.name]) {
+							params.push(paramObj); // Add it to the array of parameters to pass back
+							alreadyAdded[paramObj.name] = true
+						}
+					}
+				}
+			}
+
+			endpointPath = this.endpointPathIterator.getNext()
+		}
+
+		return params
+	}
+
+	/*
+	* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	* 
+	* 	Just like with parameters, we have to look for the path, also with {id} in the URI 
+	* 
+	*  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	* 
+	*/
+	this.defaultType = function (path, verb) {
+		//    	if (path.toLowerCase().indexOf("rest/v")) {
+		//    		return "application/vnd.ibm.isim-v1+json"
+		//    	} else {
+		return "application/json"
+		//    	}		
+	}
+
+	this.getAcceptType = function (path, verb) {
+		verb = (verb || "").toLowerCase();
+
+		var endpointPath = this.endpointPathIterator.getFirst(path);
+
+		// If this is a write operation, then the path must include /{id}
+		if (verb == "put" || verb == "delete") {
+			while (endpointPath != null && endpointPath.startsWith(path)
+				&& !(endpointPath.indexOf("/{") > 0 && endpointPath.endsWith("}"))) {
+				endpointPath = this.endpointPathIterator.getNext()
+			}
+		}
+
+		// Now to look for responses for the various responseCodes			
+		while (endpointPath != null && endpointPath.startsWith(path)) {
+			if (endpointPath.equals(path) ||
+				(endpointPath.startsWith(path + "/{") && endpointPath.endsWith("}"))) {
+				var responseCodes = this.getChildren([
+					"paths", endpointPath, verb,
+					"responses"
+				]);
+
+				if (responseCodes != null) {
+					for (var code in responseCodes) {
+						if (code.content) {
+							for (var contentType in code.content) {
+								return contentType.getName().replaceAll("\\\\", "")
+							}
+						}
+					}
+				}
+			}
+
+			endpointPath = this.endpointPathIterator.getNext()
+		}
+
+		//throw "SCHEMA.getAcceptType() unable to find content type for " + path
+		return null
+	}
+
+	/*
+	* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	* 
+	* 	Just like with parameters, we have to look for the path, also with {id} in the URI 
+	* 
+	*  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	* 
+	*/
+	this.getContentType = function (path, verb) {
+		verb = (verb || "").toLowerCase();
+
+		var endpointPath = this.endpointPathIterator.getFirst(path);
+		while (endpointPath != null && endpointPath.startsWith(path)) {
+			if (endpointPath.equals(path) ||
+				(endpointPath.startsWith(path + "/{") && endpointPath.endsWith("}"))) {
+				var content = this.getChildren([
+					"paths", endpointPath, verb,
+					"requestBody", "content"
+				]);
+
+				if (content != null) {
+					for (var accept in content) {
+						return accept.getName()
+					}
+				}
+			}
+
+			endpointPath = this.endpointPathIterator.getNext()
+		}
+
+		//throw "SCHEMA.getContentType() unable to find content type for " + path
+		return null
+	}
+
+	/* Returns the child elements (JS Obj) of the specified path
+	  Root level if no argument or blank text passed. Always return a JS object
+	  */
 	this.getChildren = function (path) {
-	//var children = {};
-	var children;
+		//var children = {};
+		var children;
 
-	if (!path) {
-		path = []
-	}
-	else
-		if (!(path instanceof Array)) {
-		path = [path]
+		if (!path) {
+			path = []
 		}
+		else
+			if (!(path instanceof Array)) {
+				path = [path]
+			}
 
-	// NB!! Here you must deal with path parts that have special characters - like slashes (roles/orgroles)
-	//      So you have to construct the attribute reference by hand
+		// NB!! Here you must deal with path parts that have special characters - like slashes (roles/orgroles)
+		//      So you have to construct the attribute reference by hand
 
-	// var expr = "//paths/path[@name=" + xpathLiteral("/people") + "]/post";
-	if (path.length > 1) {
-		var attName = "[\"" + path[0] + "\"]";
-		for (var i = 1; i < path.length; i++) {
-		var part = path[i];
-		/*        		
-		if (this.isValidDotName(part)) {
-		attName += "." + part
+		// var expr = "//paths/path[@name=" + xpathLiteral("/people") + "]/post";
+		if (path.length > 1) {
+			var attName = "[\"" + path[0] + "\"]";
+			for (var i = 1; i < path.length; i++) {
+				var part = path[i];
+				/*        		
+				if (this.isValidDotName(part)) {
+				attName += "." + part
+				} else {
+				attName += "['" + part + "']"
+				}
+				*/
+				attName += "[\"" + part + "\"]";
+
+				var testChildren = eval("this.schemaObj" + attName);
+				if (testChildren == null) return null;
+			}
+
+			children = testChildren
 		} else {
-		attName += "['" + part + "']"
-		}
-		*/
-		attName += "[\"" + part + "\"]";
-
-		var testChildren = eval("this.schemaObj" + attName);
-		if (testChildren == null) return null;
+			children = this.schemaObj.paths
 		}
 
-		children = testChildren
-	} else {
-		children = this.schemaObj.paths
-	}
-
-	return children;
+		return children;
 	}
 
 	// Store the unique identifer field for each item (people, lifecyclerules, ...)
 	this.getEndpointIdFieldNames = function () {
-	var endpointIdFieldNames = {};
-	var endpoints = this.getChildren("paths");
-	for (var endpointURI in endpoints) {
-		if (endpointURI.getName().indexOf("}") >= 0) {
-		var re = /^\/?([A-Za-z0-9_-]+)\/\{([A-Za-z0-9_-]+)\}\/?$/; // Returns the endpoint and the unique id attribute (in braces)
-		var pair = re.exec(endpointURI.getName());
-		if (pair) {
-			endpointIdFieldNames[pair[1]] = pair[2]
+		var endpointIdFieldNames = {};
+		var endpoints = this.getChildren("paths");
+		for (var endpointURI in endpoints) {
+			if (endpointURI.getName().indexOf("}") >= 0) {
+				var re = /^\/?([A-Za-z0-9_-]+)\/\{([A-Za-z0-9_-]+)\}\/?$/; // Returns the endpoint and the unique id attribute (in braces)
+				var pair = re.exec(endpointURI.getName());
+				if (pair) {
+					endpointIdFieldNames[pair[1]] = pair[2]
+				}
+			}
 		}
-		}
-	}
 
-	return endpointIdFieldNames
+		return endpointIdFieldNames
 	}
 
 	// Creates a handy Iterator object over all Strings in the sorted Array passed (arr)
 	this.makeEndpointPathArray = function (arr) {
-	// lowerBound: first index i where arr[i] >= key (lexicographic)
-	function lowerBound(a, key) {
-		var lo = 0, hi = a.length;
-		while (lo < hi) {
-		var mid = (lo + hi) >> 1;
-		if (a[mid] < key) lo = mid + 1;
-		else hi = mid;
+		// lowerBound: first index i where arr[i] >= key (lexicographic)
+		function lowerBound(a, key) {
+			var lo = 0, hi = a.length;
+			while (lo < hi) {
+				var mid = (lo + hi) >> 1;
+				if (a[mid] < key) lo = mid + 1;
+				else hi = mid;
+			}
+			return lo;
 		}
-		return lo;
-	}
 
-	var lo = 0, hi = 0, cur = -1;
+		var lo = 0, hi = 0, cur = -1;
 
-	return {
-		// returns first matching String, else -1
-		getFirst: function (prefix) {
-		lo = lowerBound(arr, prefix);
-		hi = lowerBound(arr, prefix + "\uffff"); // just beyond the prefix range
-		if (lo < hi) {
-			cur = lo;
-			return arr[lo];
-		}
-		cur = -1;
-		return null;
-		},
-		// returns next matching String, else -1
-		getNext: function () {
-		var n = cur + 1;
-		if (n >= lo && n < hi) {
-			cur = n;
-			return arr[n];
-		}
-		return null;
-		},
-		reset: function () { lo = hi = 0; cur = -1; }
-	};
+		return {
+			// returns first matching String, else -1
+			getFirst: function (prefix) {
+				lo = lowerBound(arr, prefix);
+				hi = lowerBound(arr, prefix + "\uffff"); // just beyond the prefix range
+				if (lo < hi) {
+					cur = lo;
+					return arr[lo];
+				}
+				cur = -1;
+				return null;
+			},
+			// returns next matching String, else -1
+			getNext: function () {
+				var n = cur + 1;
+				if (n >= lo && n < hi) {
+					cur = n;
+					return arr[n];
+				}
+				return null;
+			},
+			reset: function () { lo = hi = 0; cur = -1; }
+		};
 	}
 
 	// Check the schema for an endpoint support the supplied verb (GET, POST, PUT or DELETE)
 	this.pathSupportsVerb = function (path, verb) {
-	verb = (verb || "").toLowerCase();
-	var endpointPath = this.endpointPathIterator.getFirst(path);
-	while (endpointPath != null) {
-		if (this.schemaObj.paths[endpointPath][verb] != null) {
-		return true
-		}
-
-		endpointPath = this.endpointPathIterator.getNext()
-	}
-
-	return false
+		verb = (verb || "").toUpperCase();
+		var children = this.getChildren(["paths", path, verb])
+		return children != null
 	}
 
 	/* Main init logic */
