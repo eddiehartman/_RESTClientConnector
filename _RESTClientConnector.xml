@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><MetamergeConfig IDIversion="Created by SDI7.2 - 2024-09-23" created="Sun Mar 08 15:17:05 CET 2026" createdBy="eddiehartman" modified="Tue Mar 10 15:14:44 CET 2026" modifiedBy="eddiehartman" version="7.1.1">
+<?xml version="1.0" encoding="UTF-8"?><MetamergeConfig IDIversion="Created by SDI7.2 - 2024-09-23" created="Sun Mar 08 15:17:05 CET 2026" createdBy="eddiehartman" modified="Tue Mar 10 16:09:14 CET 2026" modifiedBy="eddiehartman" version="7.1.1">
     <Folder name="AssemblyLines">
         <AssemblyLine name="_allTestsRun">
             <ModTime>1772654341400</ModTime>
@@ -72,7 +72,7 @@ do {
             </InitParams>
         </AssemblyLine>
         <AssemblyLine name="_testAPIs">
-            <ModTime>1773149927344</ModTime>
+            <ModTime>1773155310569</ModTime>
             <Settings>
                 <parameter name="ALPoolSettingsDialog">showALPoolSettings</parameter>
                 <parameter name="automapattributes">false</parameter>
@@ -87,26 +87,24 @@ SCHEMA class]]></parameter>
             <SandboxConfig/>
             <SimulationConfig>
                 <SimulationStates>
-                    <Component name="RESTClientConnector" state="Enabled"/>
                     <Component name="DumpWorkEntry" state="Enabled"/>
+                    <Component name="forCC" state="Enabled"/>
                 </SimulationStates>
                 <ProxySettings/>
             </SimulationConfig>
             <LogConfig/>
-            <ContainerEF name="EntryFeedContainer"/>
-            <ContainerDF name="DataFlowContainer">
-                <ModTime>1773149927344</ModTime>
-                <Connector name="RESTClientConnector">
+            <ContainerEF name="EntryFeedContainer">
+                <Connector name="forCC">
                     <InheritFrom>/Connectors/RESTClientConnector</InheritFrom>
-                    <ModTime>1773149927344</ModTime>
+                    <ModTime>1773155310569</ModTime>
                     <ConnectorMode>Iterator</ConnectorMode>
                     <ConnectorState>Enabled</ConnectorState>
                     <Configuration>
                         <InheritFrom>[parent]</InheritFrom>
-                        <ModTime>1773149927344</ModTime>
+                        <ModTime>1773155310569</ModTime>
                         <parameter name="action">Iterator,Lookup,Update,AddOnly</parameter>
                         <parameter name="auth_method">Bearer Token</parameter>
-                        <parameter name="bearer_token">secret-token</parameter>
+                        <parameter name="bearer_token">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMDQ4MiIsInByb2dyYW1JZCI6MSwidXNlclJvbGVzIjpbIkFETUlOSVNUUkFUT1IiLCJJTlNUUlVDVE9SIiwiTE9DQUxfQlVZRVIiLCJSRVBPUlRFUiJdLCJmaXJzdE5hbWUiOiJUcnlwaG9uIiwibGFzdE5hbWUiOiJUb3VybmVzb2wiLCJpYXQiOjE3NzMxNTQ5OTcsImV4cCI6MTc3MzE2MjE5NywiaXNzIjoiaHR0cHM6Ly9iYWNrZW5kLnN1dHRpLmFwcCIsInN1YiI6IjEwNDgyIn0.FyyjxYYdL5HxxJQ_qGObqS27gqPDDQB7fyWGX8hJHTg</parameter>
                         <parameter name="path">/bo/farmers</parameter>
                         <parameter name="schema">https://backend.sutti.app/api/openapi.yaml</parameter>
                         <parameter name="url">https://backend.sutti.app/</parameter>
@@ -116,6 +114,12 @@ SCHEMA class]]></parameter>
                     </Parser>
                     <AttributeMap name="Input">
                         <InheritFrom>[parent]</InheritFrom>
+                        <ModTime>1773152811093</ModTime>
+                        <AttributeMapItem>
+                            <Name>*</Name>
+                            <Type>simple</Type>
+                            <Simple>*</Simple>
+                        </AttributeMapItem>
                     </AttributeMap>
                     <AttributeMap name="Output">
                         <InheritFrom>[parent]</InheritFrom>
@@ -150,6 +154,9 @@ SCHEMA class]]></parameter>
                     </PoolDefinition>
                     <PoolInstance/>
                 </Connector>
+            </ContainerEF>
+            <ContainerDF name="DataFlowContainer">
+                <ModTime>1773155310569</ModTime>
                 <Script name="DumpWorkEntry">
                     <ModTime>1773060152064</ModTime>
                     <parameter name="script"><![CDATA[// Dump the work entry
@@ -5876,15 +5883,15 @@ task.logmsg((e == null) ? "* no data *" : e)]]></parameter>
         </Connector>
         <Connector name="RESTClientConnector">
             <InheritFrom>system:/Connectors/ibmdi.ScriptConnector</InheritFrom>
-            <ModTime>1773150150773</ModTime>
+            <ModTime>1773154589592</ModTime>
             <ConnectorMode>Iterator</ConnectorMode>
             <ConnectorState>Enabled</ConnectorState>
             <Configuration>
                 <InheritFrom>[parent]</InheritFrom>
-                <ModTime>1773150150773</ModTime>
-                <parameter name="$form$"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><MetamergeConfig Cycle="403" UUID="cfa9bd18-a2f6-4453-9c74-0b356b1bd594" created="Tue Feb 17 10:28:46 CET 2026" createdBy="eddiehartman" main="Form" modified="Tue Mar 10 14:42:30 CET 2026" modifiedBy="eddiehartman" version="7.1.1">
+                <ModTime>1773154589592</ModTime>
+                <parameter name="$form$"><![CDATA[<?xml version="1.0" encoding="UTF-8"?><MetamergeConfig Cycle="404" UUID="cfa9bd18-a2f6-4453-9c74-0b356b1bd594" created="Tue Feb 17 10:28:46 CET 2026" createdBy="eddiehartman" main="Form" modified="Tue Mar 10 15:53:29 CET 2026" modifiedBy="eddiehartman" version="7.1.1">
     <Form name="Form">
-        <ModTime>1773150150420</ModTime>
+        <ModTime>1773154409380</ModTime>
         <FormItemNames>
             <ListItem>$GLOBAL.script</ListItem>
             <ListItem>$GLOBAL.includeFiles</ListItem>
@@ -6341,8 +6348,8 @@ task.logmsg((e == null) ? "* no data *" : e)]]></parameter>
         <parameter name="api_key_location">Header</parameter>
         <parameter name="auth_method">OAuth 2.0</parameter>
         <parameter name="client_id">444</parameter>
-        <parameter encrypted="true" name="client_key_password">esa1pWpZwitJ5iQI7zr5wObqGMapZYakQarGhbXJAoENzecRXZNt2n9oFuI5GHG3yd2AeASZrqIMnsuOl9vL1sJ/Mj8PqDTJD6KOAXMwKhi0FODfTEgdhCD/9U+UsGo7piGWn6+JKNPePqJn0bPxbEn2SgUJAPlDe5o//crX+1w=</parameter>
-        <parameter encrypted="true" name="client_secret">JSJ3kTyDh0GSg5LnBQCS3ECMMKobSJAxLJ0mxxM2cFX4MZDSC04gB2vfSBzRUNgf75MbqBKReQuB2rCPa5EhvxSHKjm7AxIhwYOwb1NP+sEAhe236U814DQgwpl4wpKfuAIhVmx8IvQkKG0F10C1as9d9s+bGB+E8giAT2Uzp0E=</parameter>
+        <parameter encrypted="true" name="client_key_password">ibm0bWfdV586hbck2G7XbFussJO5Wp6H77hpTsgfIkpf69XELlutumUuKJoSQb2CB+QpxFo05QTGBJ9zPu7JDccnIozpZitwLK9JGMOX92DRgQb5HxqZCH9yBB52YGo5jex5AhOEcCCG3RvUF6WOq4dwax50ex/yqeLJsbU03I4=</parameter>
+        <parameter encrypted="true" name="client_secret">eueyQxPsCy352rAuSUYeNT6eIIiJXj0g79q1VrYawpHxraG9yotPnQ20GpT27GWnsOO75UXIl1gW02wUndoMxfg5caN2NvOAhSn5PKU51J2OMU77yXqpSC4IgJ9f0xzUJlBeDtcb7qKBCDSHjZxUvsjdeX1ZDuWSMzVTlqGm3gk=</parameter>
         <parameter name="formscript"><![CDATA[// 20250104 1959 Initial
 // ...
 // 20260130 1436 Removed main.logmsg() debug messages
@@ -6603,7 +6610,7 @@ function fetchEndpoints() {
 		[path],
 		"Cannot fetch actions for selected Endpoint");
 
-	//fetchActions();
+	fetchActions();
 }
 
 // Once a path is selected, update the other dropdowns
@@ -7122,6 +7129,7 @@ function selectScope() {
 // 20260306 1534 Working to clean up the config in the new config _RESTClientConnector
 // 20260308 1215 Fix select/find to work without hrefs
 // 20260309 1415 Working on api key
+// 20260310 1555 Removed debug schema value
 //
 // --- TODO Freetext parameter where all the standard set of parameter values can be set
 //
@@ -7592,22 +7600,16 @@ function fetchSchema() {
 	//alert("Fetching schema...")
 	if (__schema) return __schema;
 
-	if (__debug || true) {
-		//		var schemaSpec = loadFileToString("_Restify/sample_itim_schema.yaml") // @@TODO should NOT be based on a file
-		//		var schemaSpec = system.getScriptText("sample_itim_schema_yaml")
-		schemaSpec = system.getScriptText("json_schema")
-	} else {
-		schemaEntry = __http.makeRequest({
-			verb: "GET",
-			url: __parameters.schema,
-			expectedReturnType: "Entry",
-			authUrl: __parameters.authUrl,
-			ctype: "application/json",
-			contextRoot: "",
-			where: "fetchSchema()"
-		});
-		schemaSpec = schemaEntry.getString("http.bodyAsString")
-	}
+	schemaEntry = __http.makeRequest({
+		verb: "GET",
+		url: __parameters.schema,
+		expectedReturnType: "Entry",
+		authUrl: __parameters.authUrl,
+		ctype: "application/json",
+		contextRoot: "",
+		where: "fetchSchema()"
+	});
+	schemaSpec = schemaEntry.getString("http.bodyAsString")
 
 	// Load the SCHEMA class
 	eval(system.getScriptText("SCHEMA class")) // Load SCHEMA handling class
@@ -8554,7 +8556,7 @@ if (saveEntry != null) {
             <parameter name="script">task.logmsg("-- no match found")</parameter>
         </Script>
         <Script name="RESTCLIENT class">
-            <ModTime>1773062920699</ModTime>
+            <ModTime>1773155229247</ModTime>
             <parameter name="includeFiles"/>
             <parameter name="script"><![CDATA[// This is the class that provides methods for making HTTP requests
 // 20250116 1116 Created
@@ -8574,6 +8576,7 @@ if (saveEntry != null) {
 // 20260304 2048 Removed default /itim/rest contextRoot
 // 20260306 1447 Trying to make a clean version of the config
 // 20260306 1503 Corrected a bug in makeRequest, passing entryDetails(entry) and should have passed entry
+// 20260310 1606 Removed the responseCode == 401 retry code around line 720
 //
 // TO DO:
 //   1. log_level
@@ -9279,11 +9282,14 @@ function RESTCLIENT(args) {
 				}
 
 			} catch (ex) {
-				if (ex.toString().indexOf("Unauthorized") >= 0) {
+/*
+				if (ex.toString().indexOf("Unauthorized") >= 0 &&
+ * 					!ex.toString().indexOf("authentication failed") {
 					sess.gotToken = false;
 					this.getToken();
 					retry = true;
 				} else
+*/				
 				if (ex instanceof javax.net.ssl.SSLHandshakeException) {
 					if ((ex.toString().indexOf("Certificate chaining error") >= 0) && alreadyImportedCert) {
 						this.throwException("You must restart the SDI server for the imported certificate to be trusted.");
@@ -9944,97 +9950,7 @@ function beforeExecute(mode) {
 	task.logmsg("\n----- " + thisConnector.getName() + ":")
 }]]></parameter>
         </Script>
-        <Script name="json_schema">
-            <ModTime>1773058645394</ModTime>
-            <parameter name="includeFiles"/>
-            <parameter name="script"><![CDATA[{
-  "openapi": "3.0.0",
-  "info": {
-    "title": "JSONPlaceholder",
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "https://jsonplaceholder.typicode.com"
-    }
-  ],
-  "paths": {
-    "/users": {
-      "get": {
-        "summary": "List all users",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "description": "Filter by user ID",
-            "schema": { "type": "integer" }
-          },
-          {
-            "name": "username",
-            "in": "query",
-            "required": false,
-            "description": "Filter by username",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A list of users",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/User" }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/users/{id}": {
-      "get": {
-        "summary": "Get a single user",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "User ID",
-            "schema": { "type": "integer" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "A single user",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/User" }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "User": {
-        "type": "object",
-        "properties": {
-          "id":       { "type": "integer" },
-          "name":     { "type": "string" },
-          "username": { "type": "string" },
-          "email":    { "type": "string" },
-          "phone":    { "type": "string" },
-          "website":  { "type": "string" }
-        }
-      }
-    }
-  }
-}]]></parameter>
-        </Script>
+        
     </Folder>
     <JavaLibraries/>
     <JavaProperties/>
