@@ -1,0 +1,6290 @@
+openapi: 3.0.3
+info:
+  title: Sutti-Server
+  version: 3.1.0-IF002
+servers:
+  - url: https://backend.sutti.app
+security:
+  - Bearer: []
+tags:
+  - name: Participant
+    description: Endpoints for the Participant mobile application.
+  - name: BackOffice
+    description: Endpoints for the Backoffice tooling.
+  - name: Buyer App
+    description: Endpoints consumed by the Buyer mobile application.
+paths:
+  /hello:
+    get:
+      security: []
+      tags:
+        - Participant
+      description: Returns 'Hello' to the caller
+      operationId: hello
+      parameters:
+        - name: name
+          in: query
+          description: The name of the person to whom to say hello
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: Hello
+  /user/signIn:
+    post:
+      security: []
+      tags:
+        - Participant
+      description: Returns the jwt token if participant code is valid.
+      operationId: signIn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                programId:
+                  type: number
+                code:
+                  type: string
+                user-agent:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserInfoWithToken"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: User
+  /user/refreshToken:
+    get:
+      tags:
+        - Participant
+      description: Check token and return a refreshed token.
+      operationId: refreshToken
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserInfoWithToken"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: User
+  /user/getProfileData:
+    get:
+      tags:
+        - Participant
+      description: Get User info .
+      operationId: getProfileData
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserInfo"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: User
+  /user/updateProfileData:
+    put:
+      tags:
+        - Participant
+      description: Update participant data in profile managment
+      operationId: updateProfileData
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phoneNumber:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: User
+  /user/updateLastAccessDate:
+    put:
+      tags:
+        - Participant
+      description: Update the last access date
+      operationId: updateLastAccessDate
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userAgent:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: User
+  /user/sendPushInfo:
+    put:
+      tags:
+        - Participant
+      description: Send a json payload with information on how to reach the user endpoint to push notifications
+      operationId: sendPushInfo
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                optedIn:
+                  $ref: "#/components/schemas/BooleanNumber"
+                pushURL:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: User
+  /user/updateOptedIn:
+    put:
+      tags:
+        - Participant
+      description: Whether a participant opted in for notifications or not and its pushURL if opted in
+      operationId: updateOptedIn
+      deprecated: true
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                optedIn:
+                  $ref: "#/components/schemas/BooleanNumber"
+                pushURL:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: User
+  /programs:
+    get:
+      security: []
+      tags:
+        - Participant
+      description: Get all program configuration
+      operationId: getAllPrograms
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProgramConfiguration"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: Program
+  /program/{programId}:
+    get:
+      security: []
+      tags:
+        - Participant
+      description: Get program configuration
+      operationId: getProgramById
+      parameters:
+        - name: programId
+          in: path
+          description: Program id (must be positive)
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProgramConfiguration"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: Program
+    put:
+      tags:
+        - Participant
+      description: UNUSED ENDPOINT - Update program configuration
+      deprecated: true
+      operationId: updateProgramById
+      parameters:
+        - name: programId
+          in: path
+          description: Program id (must be positive)
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProgramConfiguration"
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - ADMINISTRATOR
+      x-swagger-router-controller: Program
+  /program/{programId}/manifest:
+    get:
+      security: []
+      tags:
+        - Participant
+      description: Get program's configuration 'manifest
+      operationId: getManifestByProgramId
+      parameters:
+        - name: programId
+          in: path
+          description: Program id (must be positive)
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: baseUrl
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProgramManifest"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: Program
+  /program/{programId}/bo-manifest:
+    get:
+      security: []
+      tags:
+        - Participant
+      description: Get program's configuration 'manifest for Backoffice
+      operationId: getBoManifestByProgramId
+      parameters:
+        - name: programId
+          in: path
+          description: Program id (must be positive)
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: baseUrl
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProgramManifest"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: Program
+  /library/{programId}/courses/{courseSlug}:
+    get:
+      tags:
+        - Participant
+      description: Returns a course description with chapter structure
+      operationId: getCourseBySlug
+      parameters:
+        - name: programId
+          description: Program Identifier (must be positive)
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: courseSlug
+          description: Wordpress course slug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseDoc"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Course
+  /library/{programId}/courses/chapters/{chapterId}:
+    get:
+      tags:
+        - Participant
+      description: Returns the list of sections composing a given chapter
+      operationId: getCourseChapterById
+      parameters:
+        - name: chapterId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: programId
+          description: Program Identifier (must be positive)
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SectionContent"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Course
+  /training/my-courses:
+    get:
+      tags:
+        - Participant
+      description: Returns the list of courses for which a user is participant, or any course personnally granted.
+      operationId: getMyCourses
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DocDetails"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Training
+  /user/trainingTutorials:
+    post:
+      tags:
+        - Participant
+      description: Assign Sutti App tutorial to all participant
+      operationId: AddTutorialToUsers
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - ADMINISTRATOR
+      x-swagger-router-controller: User
+  /training/my-courses/{courseSlug}/allowed-chapters:
+    get:
+      tags:
+        - Participant
+      description: Returns the list of chapter ids allowed to a user, for a given course slug.
+      operationId: getAllowedChapters
+      parameters:
+        - name: courseSlug
+          in: path
+          description: Course trained to the user's cohort
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Training
+  /training/my-courses/{courseSlug}/chat-group:
+    get:
+      tags:
+        - Participant
+      description: Returns the URL of the chat group associated with the user's cohort course.
+      operationId: getChatGroupDetails
+      parameters:
+        - name: courseSlug
+          in: path
+          description: Course trained to the user's cohort
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChatGroupDetails"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Training
+  /training/my-courses/{courseSlug}/instructor:
+    get:
+      tags:
+        - Participant
+      description: Returns the details of the instructor, for a given course slug and user
+      operationId: getInstructorDetails
+      parameters:
+        - name: courseSlug
+          in: path
+          description: Course trained by the instructor to the user's cohort
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstructorDetails"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Training
+  /library/{programId}/media/{chapterId}/{clientScreenWidth}/{clientScreenDensity}:
+    get:
+      tags:
+        - Participant
+      description: Returns the list of all medias referenced inside each section composing a given chapter.
+      operationId: getChapterMedias
+      parameters:
+        - name: chapterId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: programId
+          in: path
+          required: true
+          description: Program Id (must be positive)
+          schema:
+            type: integer
+            minimum: 0
+        - name: clientScreenWidth
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clientScreenDensity
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MediaDetails"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Media
+  /library/{programId}/termsAndConditions/termsAndConditions:
+    get:
+      security: []
+      tags:
+        - Participant
+      description: Returns the list of T&Cs applicable to the user, in any program language.
+      operationId: getMyTermsAndConditions
+      parameters:
+        - name: user-id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: programId
+          in: path
+          required: true
+          description: Program ID (must be positive)
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DocDetails"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: TermsAndConditions
+  /library/{programId}/termsAndConditions/getCourseStructure:
+    get:
+      security: []
+      tags:
+        - Participant
+      description: Returns a course description with chapter structure
+      operationId: getCourseStructure
+      parameters:
+        - name: course-slug
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: programId
+          in: path
+          required: true
+          description: Program ID (must be positive)
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseDoc"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: TermsAndConditions
+  /library/{programId}/termsAndConditions/getTermsAndConditionsStructure:
+    get:
+      security: []
+      tags:
+        - Participant
+      description: Returns a TermsAndConditions description with chapter structure
+      operationId: getTermsAndConditionsStructure
+      parameters:
+        - name: course-slug
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: programId
+          in: path
+          required: true
+          description: Program ID (must be positive)
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseDoc"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: TermsAndConditions
+  /library/{programId}/termsAndConditions/getChapterSections:
+    get:
+      security: []
+      tags:
+        - Participant
+      description: Returns the list of sections composing a given chapter
+      operationId: getChapterSections
+      parameters:
+        - name: chapter-id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: programId
+          in: path
+          required: true
+          description: Program ID (must be positive)
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SectionContent"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: TermsAndConditions
+  /library/{programId}/termsAndConditions/getChapterMedias:
+    get:
+      security: []
+      tags:
+        - Participant
+      description: Returns the list of all medias referenced inside each section composing a given chapter.
+      operationId: getChapterMedias
+      parameters:
+        - name: chapter-id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: programId
+          in: path
+          description: Program ID (must be positive)
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MediaDetails"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: TermsAndConditions
+  /collect/getSurveyBySlug:
+    get:
+      tags:
+        - Participant
+      description: Returns a survey description along with its questions and proposed answers if so.
+      operationId: getSurveyBySlug
+      parameters:
+        - name: survey-slug
+          in: query
+          description: The slug of the impact survey.
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Survey"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Collect
+  /collect/getSurveysByUser:
+    get:
+      tags:
+        - Participant
+      description: Returns all surveys opened to a given user according to his/her participation to cohorts and opening state of survey.
+      operationId: getSurveysByUser
+      parameters:
+        - name: user-id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success, Upon return, collect identifies a context in which survey is collected, to be sent back with user data inputs'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    collect:
+                      type: number
+                    survey:
+                      $ref: "#/components/schemas/Survey"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Collect
+  /collect/getSurveyByCollect:
+    get:
+      tags:
+        - Participant
+      description: Returns the survey associated to a given collect, whatever the opening state of the collect.
+      operationId: getSurveyByCollect
+      parameters:
+        - name: collect
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Survey"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Collect
+  /collect/postSurveyResults:
+    post:
+      tags:
+        - Participant
+      description: Posts survey results as a set of user inputs entered for a given collect. The result set may be a partial update for a given collect.
+      operationId: postSurveyResults
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                collect:
+                  type: string
+                userId:
+                  type: string
+                surveyCmsId:
+                  type: string
+                inputs:
+                  type: array
+                  items:
+                    $ref: "#/components/schemas/SurveyResult"
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Collect
+  /AssociateFarmersPointsOfSale/{id}:
+    get:
+      tags:
+        - Participant
+      description: Associate Farmers to POS (for test purpose only)
+      operationId: associateFarmerToPointOfSaleController
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: program id (must be positive)
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Message confirmation
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - ADMINISTRATOR
+      x-swagger-router-controller: LocalBuyer
+  /farm/update:
+    put:
+      tags:
+        - Participant
+      description: Update farm data in profile managment
+      operationId: updateFarmData
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gpsPoint:
+                  $ref: "#/components/schemas/Coordinates"
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Farm
+  /notifications:
+    get:
+      tags:
+        - Participant
+      description: Get notifications generated for one user
+      operationId: getNotificationsByUser
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+                description: Notifications
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Notification
+    put:
+      tags:
+        - Participant
+      description: Update notifications which have been notified
+      operationId: setNotificationsToNotified
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: number
+                  programId:
+                    type: integer
+              description: Notifications to update
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Notification
+  /notifications/{id}:
+    put:
+      tags:
+        - Participant
+      description: Update notifications which have been read
+      operationId: setNotificationToRead
+      parameters:
+        - name: id
+          in: path
+          description: id to update notification
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                programId:
+                  type: integer
+              description: Program id
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Notification
+  /notifications/run-cron-check-prices/{programId}:
+    get:
+      tags:
+        - Participant
+      description: Run cron checking for prices changes and creating notifications - for test purpose only
+      operationId: checkPriceChange
+      parameters:
+        - name: programId
+          in: path
+          description: program id from notifications to test (must be positive)
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - ADMINISTRATOR
+      x-swagger-router-controller: Notification
+  /notifications/run-cron-send-notifications/{programId}:
+    get:
+      tags:
+        - Participant
+      description: Run cron checking for new push notifications to send - for test purpose only
+      operationId: sendPushNotifications
+      parameters:
+        - name: programId
+          in: path
+          description: program id from notifications to test (must be positive)
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - ADMINISTRATOR
+      x-swagger-router-controller: Notification
+  /notifications/archiveOldMessage/{programId}:
+    put:
+      tags:
+        - Participant
+      description: Archives messages that have been read and are older than two weeks.
+      operationId: archiveOldMessage
+      parameters:
+        - name: programId
+          in: path
+          description: Program ID from notifications to test (must be positive)
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+      summary: Archive old messages
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - ADMINISTRATOR
+      x-swagger-router-controller: Notification
+  /transactions:
+    get:
+      tags:
+        - Participant
+      description: Get all Transactions from a farmer.
+      operationId: getParticipantTransactions
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: transactionType
+          in: query
+          description: Transaction context/type to filter the list
+          required: false
+          schema:
+            type: string
+            enum:
+              - crop_purchase
+              - inkind_contribution_distribution
+            default: crop_purchase
+        - name: query
+          in: query
+          description: searching transactions for buyer name, product name or pos name
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: fitlering transactions by status
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - pending
+                - completed
+                - cancelled
+                - declared
+          style: form
+          explode: true
+        - name: limit
+          in: query
+          description: Max number of transactions returned per page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 200
+        - name: cursor
+          in: query
+          description: Cursor token returned by previous response (X-Next-Cursor)
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedTransactionsResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: ParticipantTransactionController
+  /transactions/export:
+    get:
+      tags:
+        - Participant
+      description: Export transactions or in kinds as an Excel file.
+      operationId: exportTransactions
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposes
+          schema:
+            type: string
+        - name: transactionType
+          in: query
+          description: Transaction context/type to filter the list
+          required: false
+          schema:
+            type: string
+            enum:
+              - crop_purchase
+              - inkind_contribution_distribution
+      responses:
+        "200":
+          description: Excel file
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: ParticipantTransactionController
+  /transactions/{transactionId}:
+    patch:
+      tags:
+        - Participant
+      description: Update a Transaction status from participant action (approve/cancel).
+      operationId: updateParticipantTransaction
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: transactionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransactionUpdateRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionUpdateResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        "409":
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: ParticipantTransactionController
+  /transactions/{transactionId}/receipt:
+    get:
+      tags:
+        - Participant
+      description: Download the Transaction receipt PDF (server-side proxy).
+      operationId: getTransactionReceipt
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: transactionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          headers:
+            Content-Disposition:
+              description: Attachment filename for the receipt file.
+              schema:
+                type: string
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: ParticipantTransactionController
+  /bo/refreshToken:
+    get:
+      tags:
+        - BackOffice
+      description: Check token and return a refreshed token for backoffice User.
+      operationId: refreshBoToken
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+      x-swagger-router-controller: User
+      x-swagger-roles:
+        - INSTRUCTOR
+        - LOCAL_BUYER
+        - REPORTER
+  /bo/user/signIn:
+    post:
+      security: []
+      tags:
+        - BackOffice
+      description: Validates user/password submitted by user, returning authenticated user information in case of success.
+      operationId: signInBackOffice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                programId:
+                  type: number
+                staffLogin:
+                  type: string
+                staffPassword:
+                  type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserInfoWithToken"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: User
+  /bo/user/forgot-password:
+    post:
+      security: []
+      tags:
+        - BackOffice
+      description: Send reset password link to backoffice user
+      operationId: forgotPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                staffLogin:
+                  type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: User
+  /bo/user/reset-password:
+    post:
+      security: []
+      tags:
+        - BackOffice
+      description: Reset backoffice user password with recovery token
+      operationId: resetPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                recoveryToken:
+                  type: string
+                staffPassword:
+                  type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: User
+  /bo/users/getAllInstructorsUserInfo:
+    get:
+      tags:
+        - BackOffice
+      description: Get User info about all instructor users.
+      operationId: getAllInstructorsUserInfo
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserInfo"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: User
+  /bo/library/{programId}/courses:
+    get:
+      tags:
+        - BackOffice
+      description: Get all courses references available in a program.
+      operationId: getAllCourses
+      parameters:
+        - name: programId
+          description: program Id (must be positive)
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DocDetails"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Course
+  /bo/library/{programId}/courses/{courseSlug}:
+    get:
+      tags:
+        - BackOffice
+      description: Returns a course description with chapter structure
+      operationId: getCourseBySlugBO
+      parameters:
+        - name: courseSlug
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: programId
+          in: path
+          required: true
+          description: program Id (must be positive)
+          schema:
+            type: integer
+            minimum: 0
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseDoc"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Course
+  /bo/collect/exportExcelSurveyResults:
+    get:
+      tags:
+        - BackOffice
+      description: Get survey results as an Excel (xlsx) file, for a given list of collects.
+      operationId: exportExcelSurveyResults
+      parameters:
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+        - name: collects
+          in: query
+          description: List of comma separated ids of collects
+          required: true
+          schema:
+            type: string
+        - name: denormalize
+          in: query
+          description: Set to true to get text data instead of ids, defaults to false.
+          schema:
+            type: boolean
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Collect
+  /bo/cohort/getAllCohorts:
+    get:
+      tags:
+        - BackOffice
+      description: Get all available cohorts created for the current program (not with participants nor courses)
+      operationId: getAllCohorts
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Read-only. Returned at cohort creation
+                    name:
+                      type: string
+                      description: Name of cohort, given by the instructor at creation time.
+                    usualLocation:
+                      type: string
+                      description: Usual location of training sessions
+                    instructor:
+                      type: string
+                      description: Instructor (id) who will train for the cohort. To be set for updates
+                    instructorDisplayName:
+                      type: string
+                      description: Instructor first and last name, for display purpose, retrieved onmy by getAllCohorts
+                    instructorDetails:
+                      $ref: "#/components/schemas/UserInfo"
+                    courses:
+                      type: array
+                      description: >
+                        Courses to be trained to the cohort, ordered as in cms Not retrieved by getAllCohorts. When used for updates, only 'slug' and 'order' property of elements have to be set.
+
+                      items:
+                        type: object
+                        allOf:
+                          - $ref: "#/components/schemas/DocDetails"
+                          - type: object
+                            properties:
+                              allowedChapters:
+                                type: array
+                                items:
+                                  type: string
+                              chatGroupDetails:
+                                $ref: "#/components/schemas/ChatGroupDetails"
+                              started:
+                                type: boolean
+                              completed:
+                                type: boolean
+                              sessionHours:
+                                type: integer
+                    participantCount:
+                      type: integer
+                      description: Number of participants enrolled in the cohort, read-only.
+                    participants:
+                      type: array
+                      description: >
+                        Array of participants along with participation information, that constitutes the cohort. Not retrieved by getAllCohorts. On update, only "participant and "isAmbassador" have to be set.
+
+                      items:
+                        type: object
+                        allOf:
+                          - $ref: "#/components/schemas/UserInfo"
+                          - type: object
+                            properties:
+                              participant:
+                                type: string
+                                description: participant (user id)
+                              isAmbassador:
+                                type: boolean
+                                description: Is this participant ambassador of this cohort ?
+                              enrollmentDate:
+                                type: string
+                                description: Date automatically set at creation of a participation, read-only.
+                            description: Object that describes participation of a farmer in a cohort
+                  description: >
+                    Object that describes details of a Cohort, when creating, updating and listing cohorts. Read-only fields are aimed to display only, and should not be sent on update/create.
+
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Cohort
+  /bo/cohort/postCohort:
+    post:
+      tags:
+        - BackOffice
+      description: Creates a cohort, with enrolled participants and courses (or not)
+      operationId: postCohort
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Read-only. Returned at cohort creation
+                name:
+                  type: string
+                  description: Name of cohort, given by the instructor at creation time.
+                gpsPoint:
+                  $ref: "#/components/schemas/Coordinates"
+                instructor:
+                  type: number
+                  nullable: true
+                  description: Instructor (id) who will train for the cohort. To be set for updates
+                instructorDisplayName:
+                  type: string
+                  description: Instructor first and last name, for display purpose, retrieved onmy by getAllCohorts
+                instructorDetails:
+                  $ref: "#/components/schemas/UserInfo"
+                courses:
+                  type: array
+                  description: >
+                    Courses to be trained to the cohort, ordered as in cms Not retrieved by getAllCohorts. When used for updates, only 'slug' and 'order' property of elements have to be set.
+
+                  items:
+                    type: object
+                    allOf:
+                      - $ref: "#/components/schemas/DocDetails"
+                      - type: object
+                        properties:
+                          allowedChapters:
+                            type: array
+                            items:
+                              type: string
+                          chatGroupDetails:
+                            $ref: "#/components/schemas/ChatGroupDetails"
+                          started:
+                            type: boolean
+                          completed:
+                            type: boolean
+                          sessionHours:
+                            type: integer
+                participantCount:
+                  type: integer
+                  description: Number of participants enrolled in the cohort, read-only.
+                participants:
+                  type: array
+                  description: >
+                    Array of participants along with participation information, that constitutes the cohort. Not retrieved by getAllCohorts. On update, only "participant and "isAmbassador" have to be set.
+
+                  items:
+                    type: object
+                    allOf:
+                      - $ref: "#/components/schemas/UserInfo"
+                      - type: object
+                        properties:
+                          participant:
+                            type: string
+                            description: participant (user id)
+                          isAmbassador:
+                            type: boolean
+                            description: Is this participant ambassador of this cohort
+                        description: Object that describes participation of a farmer in a cohort
+              description: >
+                Object that describes details of a Cohort, when creating, updating and listing cohorts. Read-only fields are aimed to display only, and should not be sent on update/create.
+
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                    description: Read-only. Returned at cohort creation
+                  name:
+                    type: string
+                    description: Name of cohort.
+                  gpsPoint:
+                    $ref: "#/components/schemas/Coordinates"
+                  instructor:
+                    type: number
+                    nullable: true
+                  program:
+                    type: integer
+                    description: Program ID (must be positive)
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Cohort
+  /bo/cohort/getCohortById:
+    get:
+      tags:
+        - BackOffice
+      description: Get cohort along with participants and courses
+      operationId: getCohortById
+      parameters:
+        - name: cohort-id
+          in: query
+          description: Id of cohort to retrieve.
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: >
+                  Object that describes details of a Cohort, when creating, updating and listing cohorts. Read-only fields are aimed to display only, and should not be sent on update/create.
+
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Cohort
+  /bo/cohort/cohortLocation:
+    get:
+      tags:
+        - BackOffice
+      description: Get cohort usual location
+      operationId: getCohortLocation
+      parameters:
+        - name: cohortId
+          in: query
+          description: Id of cohort to retrieve.
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Cohort location payload
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Cohort
+  /bo/cohort/putCohort:
+    put:
+      tags:
+        - BackOffice
+      description: Updates a Cohort, with enrolled participants.
+      operationId: putCohort
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Read-only. Returned at cohort creation
+                name:
+                  type: string
+                  description: Name of cohort, given by the instructor at creation time.
+                gpsPoint:
+                  oneOf:
+                    - $ref: "#/components/schemas/Coordinates"
+                instructor:
+                  type: number
+                  nullable: true
+                  description: Instructor (id) who will train for the cohort. To be set for updates
+                instructorDisplayName:
+                  type: string
+                  description: Instructor first and last name, for display purpose, retrieved onmy by getAllCohorts
+                instructorDetails:
+                  $ref: "#/components/schemas/UserInfo"
+                courses:
+                  type: array
+                  description: >
+                    Courses to be trained to the cohort, ordered as in cms Not retrieved by getAllCohorts. When used for updates, only 'slug' and 'order' property of elements have to be set.
+
+                  items:
+                    type: object
+                    allOf:
+                      - $ref: "#/components/schemas/DocDetails"
+                      - type: object
+                        properties:
+                          allowedChapters:
+                            type: array
+                            items:
+                              type: string
+                          chatGroupDetails:
+                            $ref: "#/components/schemas/ChatGroupDetails"
+                          started:
+                            type: boolean
+                          completed:
+                            type: boolean
+                          sessionHours:
+                            type: number
+                          chatGroupLink:
+                            type: string
+                          chatGroupProvider:
+                            type: string
+                participantCount:
+                  type: integer
+                  description: Number of participants enrolled in the cohort, read-only.
+                participants:
+                  type: array
+                  description: >
+                    Array of participants along with participation information, that constitutes the cohort. Not retrieved by getAllCohorts. On update, only "participant and "isAmbassador" have to be set.
+
+                  items:
+                    type: object
+                    allOf:
+                      - $ref: "#/components/schemas/UserInfo"
+                      - type: object
+                        properties:
+                          participant:
+                            type: string
+                            description: participant (user id)
+                          isAmbassador:
+                            type: boolean
+                            description: Is this participant ambassador of this cohort ?
+                          enrollmentDate:
+                            type: string
+                            description: Date automatically set at creation of a participation, read-only.
+                        description: Object that describes participation of a farmer in a cohort
+              description: >
+                Object that describes details of a Cohort, when creating, updating and listing cohorts. Read-only fields are aimed to display only, and should not be sent on update/create.
+
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Cohort
+  /bo/cohort/putChaptersOnCourseByCohort:
+    put:
+      tags:
+        - BackOffice
+      description: Updates a list of chapter by course in a cohorts.
+      operationId: putChaptersOnCourseByCohort
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Object that describes details of a course in a cohort
+              properties:
+                cohortId:
+                  type: string
+                courseSlug:
+                  type: string
+                allowedChapters:
+                  type: array
+                  items:
+                    type: string
+                chatGroupDetails:
+                  $ref: "#/components/schemas/ChatGroupDetails"
+                started:
+                  type: boolean
+                completed:
+                  type: boolean
+                sessionHours:
+                  type: integer
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Cohort
+  /bo/sms/sendSms:
+    post:
+      tags:
+        - BackOffice
+      description: Send an sms to the given phone number
+      operationId: sendSms
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                receiverNumber:
+                  type: string
+                messageContent:
+                  type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Sms
+  /bo/sms/sendGeneratedUrl:
+    post:
+      tags:
+        - BackOffice
+      description: Send a generated url by sms
+      operationId: sendGeneratedUrl
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  required:
+                    - participantCode
+                    - message
+                  properties:
+                    participantCode:
+                      type: string
+                    message:
+                      type: string
+                - type: object
+                  required:
+                    - cohortId
+                    - message
+                  properties:
+                    message:
+                      type: string
+                    cohortId:
+                      type: array
+                      items:
+                        type: number
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Sms
+  /bo/sms/sendSmsToCohort:
+    post:
+      tags:
+        - BackOffice
+      description: Send an sms to an entire cohort
+      operationId: sendSmsToCohort
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cohortId:
+                  type: string
+                messageContent:
+                  type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Sms
+  /bo/notification/sendNotificationToCohort:
+    post:
+      tags:
+        - BackOffice
+      description: Send a push notification to each cohort's participant
+      operationId: sendNotificationToCohort
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cohortId:
+                  type: string
+                messageContent:
+                  type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Notification
+  /bo/farmers:
+    get:
+      tags:
+        - BackOffice
+      description: Get user information of each enabled farmer.
+      operationId: getAllFarmers
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserInfo"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Farmer
+    post:
+      tags:
+        - BackOffice
+      description: Create a farmer account.
+      operationId: createFarmer
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FarmerInfo"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FarmerInfo"
+        "409":
+          description: Duplicated Content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DuplicatedResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Farmer
+  /bo/farmers/{userId}:
+    get:
+      tags:
+        - BackOffice
+      description: Get user information of a given farmer, disabled account included.
+      operationId: getFarmerById
+      parameters:
+        - name: userId
+          in: path
+          description: Farmer user to query data from.
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FarmerInfo"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Farmer
+    put:
+      tags:
+        - BackOffice
+      description: Update user information of a given farmer.
+      operationId: updateFarmerById
+      parameters:
+        - name: userId
+          in: path
+          description: Farmer user to query data from.
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FarmerInfo"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        "409":
+          description: Duplicated Content
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DuplicatedResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Farmer
+  /bo/farmers/{filename}/media:
+    get:
+      tags:
+        - BackOffice
+      description: Get access URL to a farmer media (profile picture, proof of ID, etc.).
+      operationId: getFarmerMedia
+      parameters:
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: Type of media to query (profile picture, proof of ID, etc.)
+          required: true
+          schema:
+            type: string
+        - name: filename
+          in: path
+          description: Farmer filename to query data from.
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FarmerMediaInfo"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Farmer
+  /bo/farmers/excelReport:
+    get:
+      tags:
+        - BackOffice
+      description: Aggregates farmer data into an Excel (xlsx) file
+      operationId: exportExcel
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        default:
+          description: Error
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Farmer
+  /bo/farmers/bulk-import:
+    post:
+      tags:
+        - BackOffice
+      summary: Bulk import data from Excel file
+      description: Creates multiple Farmers account from an Excel spreadsheet
+      operationId: bulkImport
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Excel file containing data to import
+            encoding:
+              file:
+                contentType: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel
+      responses:
+        "200":
+          description: File uploaded and processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: File processed successfully
+                  recordsProcessed:
+                    type: integer
+                    example: 150
+                  importId:
+                    type: string
+                    example: import_12345
+        "400":
+          description: Bad request - Invalid file or format
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Invalid file format. Please upload an Excel file.
+        "413":
+          description: File too large
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: File size exceeds maximum limit
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: Internal server error occurred during processing
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Farmer
+  /bo/farmers/bulk-import/templates/{filename}:
+    get:
+      tags:
+        - BackOffice
+      summary: Download bulk import Excel template
+      description: Downloads an Excel template file for bulk farmer import.
+      operationId: downloadBulkImportTemplate
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Farmer
+  /bo/farm/getFarmDataByParticipant:
+    get:
+      tags:
+        - BackOffice
+      description: Get farm data related to a given participant.
+      operationId: getFarmDataByParticipant
+      parameters:
+        - name: user-id
+          in: query
+          description: Participant to query farm data from.
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Describes the farm of a participant (location, surfaces, plots…).
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Farm
+  /bo/farm/postFarmData:
+    post:
+      tags:
+        - BackOffice
+      description: Creates participant's farm data.
+      operationId: postFarmData
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                farmer:
+                  type: string
+                  description: The farmer's user-id should be given for whatever farm data request (post/put).
+                gpsPoint:
+                  $ref: "#/components/schemas/Coordinates"
+                totalFarmedSurface:
+                  type: number
+                totalUnfarmedSurface:
+                  type: number
+                mainCultivatedCrop:
+                  type: string
+                numberOfEmployees:
+                  type: number
+                workersAverageAge:
+                  type: number
+                  nullable: true
+                youngestsWorkerAge:
+                  type: number
+                  nullable: true
+                mainProgramCrop:
+                  type: string
+                  nullable: true
+                preferredGoToMarketRoute:
+                  type: string
+                  nullable: true
+                distanceToPointOfSale:
+                  type: number
+                  nullable: true
+                mainCropPlots:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      size:
+                        type: number
+                      gisShapefile:
+                        type: string
+                        nullable: true
+                      yearOfPlanting:
+                        type: integer
+                        nullable: true
+                      harvestingStartYear:
+                        type: integer
+                        nullable: true
+                      density:
+                        type: number
+                        nullable: true
+                      variety:
+                        type: string
+                        nullable: true
+                      cloneName:
+                        type: string
+                        nullable: true
+                    description: Describes a plot for a given crop (Size, location, usage history…).
+                numberOfCattleHeads:
+                  type: integer
+                  nullable: true
+                averageWeeklyHoursSpentOnCattle:
+                  type: number
+                  nullable: true
+                numberOfFishHeads:
+                  type: integer
+                  nullable: true
+                averageWeeklyHoursSpentOnFish:
+                  type: number
+                  nullable: true
+                numberOfProducts:
+                  type: integer
+                  nullable: true
+                averageWeeklyHoursSpentOnCommerce:
+                  type: number
+                  nullable: true
+                numberOfWorkAccidentsPerYear:
+                  type: integer
+                  nullable: true
+                numberOfWorkDaysLostDueToWorkAccidentsPerYear:
+                  type: number
+                  nullable: true
+              description: Describes the farm of a participant (location, surfaces, plots…).
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Farm
+  /bo/farm/putFarmData:
+    put:
+      tags:
+        - BackOffice
+      description: Updates participant's farm data.
+      operationId: putFarmData
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                farmer:
+                  type: number
+                  description: The farmer's user-id should be given for whatever farm data request (post/put).
+                gpsPoint:
+                  $ref: "#/components/schemas/Coordinates"
+                totalFarmedSurface:
+                  type: number
+                totalUnfarmedSurface:
+                  type: number
+                mainCultivatedCrop:
+                  type: string
+                  nullable: true
+                numberOfEmployees:
+                  type: integer
+                workersAverageAge:
+                  type: number
+                  nullable: true
+                youngestsWorkerAge:
+                  type: integer
+                  nullable: true
+                mainProgramCrop:
+                  type: string
+                  nullable: true
+                preferredGoToMarketRoute:
+                  type: string
+                  nullable: true
+                distanceToPointOfSale:
+                  type: number
+                  nullable: true
+                mainCropPlots:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      size:
+                        type: number
+                      gisShapefile:
+                        type: string
+                        nullable: true
+                      yearOfPlanting:
+                        type: integer
+                        nullable: true
+                      harvestingStartYear:
+                        type: integer
+                        nullable: true
+                      density:
+                        type: number
+                        nullable: true
+                      variety:
+                        type: string
+                        nullable: true
+                      cloneName:
+                        type: string
+                        nullable: true
+                      registrationNumber:
+                        type: string
+                        nullable: true
+                      proofOfRegistrationNumberFilename:
+                        type: string
+                        nullable: true
+                      proofOfOwnershipFilename:
+                        type: string
+                        nullable: true
+                      program:
+                        type: integer
+                      farm:
+                        type: number
+                      id:
+                        type: number
+                        nullable: true
+                    description: Describes a plot for a given crop (Size, location, usage history…).
+                numberOfCattleHeads:
+                  type: integer
+                  nullable: true
+                averageWeeklyHoursSpentOnCattle:
+                  type: number
+                  nullable: true
+                numberOfFishHeads:
+                  type: integer
+                  nullable: true
+                averageWeeklyHoursSpentOnFish:
+                  type: number
+                  nullable: true
+                numberOfProducts:
+                  type: integer
+                  nullable: true
+                averageWeeklyHoursSpentOnCommerce:
+                  type: number
+                  nullable: true
+                numberOfWorkAccidentsPerYear:
+                  type: integer
+                  nullable: true
+                numberOfWorkDaysLostDueToWorkAccidentsPerYear:
+                  type: number
+                  nullable: true
+              description: Describes the farm of a participant (location, surfaces, plots…).
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Farm
+  /bo/production/getProductionDataByParticipant:
+    get:
+      tags:
+        - BackOffice
+      description: Get production data related to a given participant.
+      operationId: getProductionDataByParticipant
+      parameters:
+        - name: user-id
+          in: query
+          description: Participant to query production data from.
+          required: true
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Describes the production of a participant (Workload, revenue, secondary crops and activities,…).
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Production
+  /bo/production/postProductionData:
+    post:
+      tags:
+        - BackOffice
+      description: Creates production data related to a given participant.
+      operationId: postProductionData
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                farmer:
+                  type: string
+                  description: The farmer's user-id should be given for whatever production data request (post/put).
+                otherCrops:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        nullable: true
+                      production:
+                        type: number
+                        nullable: true
+                      revenue:
+                        type: number
+                        nullable: true
+                      farming_cycles:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            plot_size:
+                              type: number
+                              nullable: true
+                            numberOfCultivationMonths:
+                              type: number
+                              nullable: true
+                    description: Describes details of crop plots usage (production, revenue, farming cycles…).
+                totalWeeklyEmployeesWorkHours:
+                  type: number
+                  nullable: true
+                weeklyTimeSpentOnFarmingMainCrop:
+                  type: number
+                  nullable: true
+                mainCropIntrants:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        nullable: true
+                      name:
+                        type: string
+                        nullable: true
+                      yearlyQuantity:
+                        type: number
+                        nullable: true
+                    description: Describes details of crop plots usage (production, revenue, farming cycles…).
+                mainCropProductionCostsByMonth:
+                  type: number
+                  nullable: true
+                mainCropLaborCostsByMonth:
+                  type: number
+                  nullable: true
+                weeklyTimeSpentOnFarmingOtherCrops:
+                  type: number
+                  nullable: true
+                cattleYearlyProduction:
+                  type: number
+                  nullable: true
+                cattleByproductsYearlyProduction:
+                  type: number
+                  nullable: true
+                cattleYearlyProductionRevenue:
+                  type: number
+                  nullable: true
+                fishYearlyProduction:
+                  type: number
+                  nullable: true
+                fishYearlyProductionRevenue:
+                  type: number
+                  nullable: true
+                commerceYearlyProduction:
+                  type: number
+                  nullable: true
+                commerceYearlyProductionRevenue:
+                  type: number
+                  nullable: true
+                averageHoursSpentWorkingOfffarmPerWeek:
+                  type: number
+                  nullable: true
+                averageWeeklyOfffarmRevenue:
+                  type: number
+                  nullable: true
+                averageMonthlyMainCropProductionRevenue:
+                  type: number
+                  nullable: true
+                averageMonthlyMainCropProduction:
+                  type: number
+                  nullable: true
+                mainCropYearlyProductionRevenue:
+                  type: number
+                  nullable: true
+                mainCropYearlyProduction:
+                  type: number
+                  nullable: true
+                numberOfSalesTransactionsPerYear:
+                  type: number
+                  nullable: true
+                amountOfSalesTransactionsPerYear:
+                  type: number
+                  nullable: true
+              description: Describes the production of a participant (Workload, revenue, secondary crops and activities,…).
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Production
+  /bo/production/putProductionData:
+    put:
+      tags:
+        - BackOffice
+      description: Updates production data related to a given participant.
+      operationId: putProductionData
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                farmer:
+                  type: string
+                  description: The farmer's user-id should be given for whatever production data request (post/put).
+                otherCrops:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        nullable: true
+                      production:
+                        type: number
+                        nullable: true
+                      revenue:
+                        type: number
+                        nullable: true
+                      farming_cycles:
+                        type: array
+                        nullable: true
+                        items:
+                          type: object
+                          properties:
+                            plot_size:
+                              type: number
+                              nullable: true
+                            numberOfCultivationMonths:
+                              type: number
+                              nullable: true
+                    description: Describes details of crop plots usage (production, revenue, farming cycles…).
+                totalWeeklyEmployeesWorkHours:
+                  type: number
+                  nullable: true
+                weeklyTimeSpentOnFarmingMainCrop:
+                  type: number
+                  nullable: true
+                mainCropIntrants:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        nullable: true
+                      name:
+                        type: string
+                        nullable: true
+                      yearlyQuantity:
+                        type: number
+                        nullable: true
+                    description: Describes details of crop plots usage (production, revenue, farming cycles…).
+                mainCropProductionCostsByMonth:
+                  type: number
+                  nullable: true
+                mainCropLaborCostsByMonth:
+                  type: number
+                  nullable: true
+                weeklyTimeSpentOnFarmingOtherCrops:
+                  type: number
+                  nullable: true
+                cattleYearlyProduction:
+                  type: number
+                  nullable: true
+                cattleByproductsYearlyProduction:
+                  type: number
+                  nullable: true
+                cattleYearlyProductionRevenue:
+                  type: number
+                  nullable: true
+                fishYearlyProduction:
+                  type: number
+                  nullable: true
+                fishYearlyProductionRevenue:
+                  type: number
+                  nullable: true
+                commerceYearlyProduction:
+                  type: number
+                  nullable: true
+                commerceYearlyProductionRevenue:
+                  type: number
+                  nullable: true
+                averageHoursSpentWorkingOfffarmPerWeek:
+                  type: number
+                  nullable: true
+                averageWeeklyOfffarmRevenue:
+                  type: number
+                  nullable: true
+                averageMonthlyMainCropProductionRevenue:
+                  type: number
+                  nullable: true
+                averageMonthlyMainCropProduction:
+                  type: number
+                  nullable: true
+                mainCropYearlyProductionRevenue:
+                  type: number
+                  nullable: true
+                mainCropYearlyProduction:
+                  type: number
+                  nullable: true
+                numberOfSalesTransactionsPerYear:
+                  type: number
+                  nullable: true
+                amountOfSalesTransactionsPerYear:
+                  type: number
+                  nullable: true
+              description: Describes the production of a participant (Workload, revenue, secondary crops and activities,…).
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Production
+  /bo/buyers/{id}/pointsOfSale:
+    get:
+      tags:
+        - BackOffice
+      description: Get all local buyer's authorized points of sale.
+      operationId: getBuyerPointsOfSale
+      parameters:
+        - name: id
+          in: path
+          description: local buyer to query points of sale from.
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                description: Buyers points of sale
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: number
+                    program:
+                      type: integer
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    gpsPoint:
+                      $ref: "#/components/schemas/Coordinates"
+                    LocalBuyers:
+                      type: array
+                      items:
+                        type: object
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: LocalBuyer
+  /bo/pointsOfSale/{id}/products:
+    get:
+      tags:
+        - BackOffice
+      description: Get all products from a point of sale.
+      operationId: getPointOfSaleProducts
+      parameters:
+        - name: id
+          in: path
+          description: Point of sale to query products from.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  description: Object describing a Product when creating, updating and listing products.
+                  properties:
+                    id:
+                      type: number
+                      description: Read-only. Returned at product creation
+                    name:
+                      type: string
+                    description:
+                      type: string
+                    commodity:
+                      type: integer
+                      description: Id from the commodity which owns the product.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: Product
+  /bo/pointsOfSale/{pointOfSaleId}/products/{productId}/prices:
+    get:
+      tags:
+        - BackOffice
+      description: Get one product's prices.
+      operationId: getProductPrices
+      parameters:
+        - name: pointOfSaleId
+          in: path
+          description: Point of sale id to query its prices.
+          required: true
+          schema:
+            type: integer
+        - name: productId
+          in: path
+          description: Product id to query its prices.
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Read-only. Returned at price creation
+                    product:
+                      type: integer
+                      description: Id from the product which is linked to this price.
+                    pointOfSale:
+                      type: integer
+                      description: Id from the point of sale attached to this price.
+                    value:
+                      type: number
+                      description: Price's amount formatted as '00.00'
+                    currency:
+                      type: string
+                      description: Price's currency formatted as 'rp'
+                    startDate:
+                      type: string
+                      description: The date when product's price is officially set to this value
+                      nullable: true
+                    endDate:
+                      type: string
+                      description: The date when this price is unset for a product
+                      nullable: true
+                    creationDate:
+                      type: string
+                      description: The date when this price was create
+                    enabled:
+                      type: integer
+                      description: 0 if the price has already been set and is no longer available at this date, else 1
+                  description: Object describing Price's details, when creating, updating and listing prices. Read-only fields are aimed to display only, and should not be sent on update/create.
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: Price
+    post:
+      tags:
+        - BackOffice
+      description: Post one product price.
+      operationId: upsertProductPrice
+      parameters:
+        - name: pointOfSaleId
+          in: path
+          description: Point of sale id to query its prices.
+          required: true
+          schema:
+            type: integer
+        - name: productId
+          in: path
+          description: Product id to query its prices.
+          required: true
+          schema:
+            type: integer
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                product:
+                  type: number
+                pointOfSale:
+                  type: number
+                value:
+                  type: number
+                currency:
+                  type: string
+                startDate:
+                  type: string
+                  nullable: true
+                endDate:
+                  type: string
+                  nullable: true
+                program:
+                  type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: Price
+      x-codegen-request-body-name: priceData
+    delete:
+      tags:
+        - BackOffice
+      description: Delete one product price.
+      operationId: deleteProductPrice
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: pointOfSaleId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: Price
+  /bo/services:
+    get:
+      tags:
+        - BackOffice
+      description: Get all services.
+      operationId: getAllServices
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Service"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - PARTICIPANT
+      x-swagger-router-controller: Service
+  /bo/session:
+    post:
+      tags:
+        - BackOffice
+      description: Create a new session of a cohort course.
+      operationId: createSession
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - cmsCourse
+                - cohort
+                - name
+              properties:
+                name:
+                  type: string
+                cmsCourse:
+                  type: string
+                cohort:
+                  type: number
+                date:
+                  type: string
+                  nullable: true
+                gpsPoint:
+                  $ref: "#/components/schemas/Coordinates"
+                description:
+                  type: string
+                  nullable: true
+                instructor:
+                  type: number
+                  nullable: true
+                attendanceSheet:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Session
+    delete:
+      tags:
+        - BackOffice
+      description: Delete a cohort course session.
+      operationId: deleteSession
+      parameters:
+        - in: query
+          name: cmsCourse
+          required: true
+          description: The name of the session course.
+          schema:
+            type: string
+        - in: query
+          name: cohort
+          required: true
+          description: The ID of the cohort.
+          schema:
+            type: integer
+        - in: query
+          name: sessionNumber
+          required: true
+          description: The number of the session.
+          schema:
+            type: integer
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Session
+    put:
+      tags:
+        - BackOffice
+      description: Update a cohort course session.
+      operationId: updateSession
+      parameters:
+        - in: query
+          name: sessionId
+          required: true
+          description: Id of a session.
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                cmsCourse:
+                  type: string
+                cohort:
+                  type: number
+                date:
+                  type: string
+                gpsPoint:
+                  $ref: "#/components/schemas/Coordinates"
+                description:
+                  type: string
+                  nullable: true
+                instructor:
+                  type: number
+                  nullable: true
+                attendanceSheet:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Session
+  /bo/session/{sessionId}:
+    get:
+      tags:
+        - BackOffice
+      description: Get session info by Id
+      operationId: getSessionById
+      parameters:
+        - name: sessionId
+          in: path
+          description: Session ID
+          required: true
+          schema:
+            type: number
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  attendanceSheet:
+                    type: string
+                    nullable: true
+                  attendanceSheetFilename:
+                    type: string
+                    nullable: true
+                  cmsCourse:
+                    type: string
+                  cohort:
+                    type: number
+                  date:
+                    type: string
+                    nullable: true
+                  description:
+                    type: string
+                    nullable: true
+                  gpsPoint:
+                    $ref: "#/components/schemas/Coordinates"
+                  instructor:
+                    type: number
+                    nullable: true
+                  name:
+                    type: string
+                  sessionNumber:
+                    type: number
+                  status:
+                    type: string
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Session
+  /bo/sessions/{cohortId}:
+    get:
+      tags:
+        - BackOffice
+      description: Get all sessions of a cohort.
+      operationId: getSessions
+      parameters:
+        - name: cohortId
+          in: path
+          description: Cohort ID
+          required: true
+          schema:
+            type: number
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  cohortName:
+                    type: string
+                  sessionsByCourse:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        cmsCourse:
+                          type: string
+                        program:
+                          type: integer
+                        Sessions:
+                          type: array
+                        title:
+                          type: string
+                        imageUrl:
+                          type: string
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Session
+  /bo/attendance:
+    post:
+      tags:
+        - BackOffice
+      description: Mark presence for a session.
+      operationId: createAttendanceSheet
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required:
+                  - userId
+                  - sessionId
+                properties:
+                  userId:
+                    type: number
+                  sessionId:
+                    type: number
+                  representedBy:
+                    $ref: "#/components/schemas/RepresentedBy"
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Attendance
+  /bo/attendance/{sessionId}:
+    get:
+      tags:
+        - BackOffice
+      description: Get farmers who participated to a session.
+      operationId: getAttendanceSession
+      parameters:
+        - name: sessionId
+          in: path
+          description: Session ID
+          required: true
+          schema:
+            type: number
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    userId:
+                      type: number
+                    sessionId:
+                      type: number
+                    representedBy:
+                      $ref: "#/components/schemas/RepresentedBy"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Attendance
+  /bo/session/alert:
+    post:
+      tags:
+        - BackOffice
+      description: Alert cohort of new session.
+      operationId: alertSession
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                sessionId:
+                  type: number
+                message:
+                  type: string
+                shareLocation:
+                  type: boolean
+                shareDate:
+                  type: boolean
+                shareDescription:
+                  type: boolean
+                shareInstructor:
+                  type: boolean
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - INSTRUCTOR
+      x-swagger-router-controller: Session
+  /bo/reporter:
+    get:
+      tags:
+        - BackOffice
+      description: Create a metabase signed token for embedded dashboards.
+      operationId: createMetabaseSignedToken
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposes
+          schema:
+            type: string
+        - name: slug
+          in: query
+          description: slug
+          required: true
+          schema:
+            type: string
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - REPORTER
+        - INSTRUCTOR
+      x-swagger-router-controller: Report
+  /bo/perimeter:
+    get:
+      tags:
+        - BackOffice
+      description: Get all perimeters
+      operationId: getPerimeters
+      parameters:
+        - name: perimeters
+          in: query
+          description: list of perimeters
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    perimeter:
+                      type: number
+                    roles:
+                      type: array
+                      items:
+                        type: string
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - REPORTER
+        - INSTRUCTOR
+        - LOCAL_BUYER
+        - ADMINISTRATOR
+      x-swagger-router-controller: Perimeter
+  /buyer/v1.0/user/signIn:
+    post:
+      security: []
+      tags:
+        - Buyer App
+      description: Validates user/password submitted by buyer, returning authenticated user information in case of success.
+      operationId: signIn
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/schemas-UserInfoWithToken"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: AuthController
+  /buyer/v1.0/user/password/forgot:
+    post:
+      security: []
+      tags:
+        - Buyer App
+      description: Sends a password reset email to the given address if a user exists.
+      operationId: requestPasswordReset
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - staffLogin
+              properties:
+                staffLogin:
+                  type: string
+        required: true
+      responses:
+        "204":
+          description: Email sent (if user exists)
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: AuthController
+  /buyer/v1.0/user/password/reset:
+    post:
+      security: []
+      tags:
+        - Buyer App
+      description: Resets the user password using a valid recovery token.
+      operationId: resetPassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - password
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+        required: true
+      responses:
+        "200":
+          description: Password successfully reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-router-controller: AuthController
+  /buyer/v1.0/pointsOfSale:
+    get:
+      tags:
+        - Buyer App
+      description: Get all local buyer's authorized points of sale.
+      operationId: getPointsOfSaleForBuyer
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PointOfSale"
+                description: Buyers point of sales
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: PointOfSaleController
+  /buyer/v1.0/pointsOfSale/{id}/farmers:
+    get:
+      tags:
+        - Buyer App
+      description: Get all farmers from a point of sale.
+      operationId: getFarmerForPointOfSale
+      parameters:
+        - name: id
+          in: path
+          description: Point of sale to query farmers from.
+          required: true
+          schema:
+            type: integer
+        - name: query
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 200
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PaginatedFarmersResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: FarmerController
+  /buyer/v1.0/pointsOfSale/{id}/products:
+    get:
+      tags:
+        - Buyer App
+      description: Get all products from a point of sale.
+      operationId: getProductsForPointOfSale
+      parameters:
+        - name: id
+          in: path
+          description: Point of sale to query products from.
+          required: true
+          schema:
+            type: integer
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: type
+          in: query
+          description: Product context/type to filter the list
+          required: false
+          schema:
+            type: string
+            enum:
+              - crop
+              - inkind_contribution
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+                  description: Object describing a Product when creating, updating and listing products. Read-only fields are aimed to display only, and should not be sent on update/create.
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: ProductController
+  /buyer/v1.0/transaction:
+    post:
+      tags:
+        - Buyer App
+      description: Create a transaction.
+      operationId: createTransaction
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Object that describres details of a course in a cohort
+              properties:
+                transactionType:
+                  type: string
+                  description: Transaction context/type (buyer transaction vs in-kind distribution)
+                  enum:
+                    - crop_purchase
+                    - inkind_contribution_distribution
+                pointOfSaleId:
+                  type: integer
+                  description: Id of the Point Of Sale for the Transacation
+                farmerExternalId:
+                  type: string
+                  description: External UUID of the farmer
+                productId:
+                  type: integer
+                  description: Id of the Product for the Transacation
+                productName:
+                  type: string
+                  description: Name of the Product for the Transacation
+                quantityUnit:
+                  type: string
+                  description: Unit of the Product for the Transacation
+                quantity:
+                  type: number
+                  description: Quantity of Product (measured in quantityUnit) for the Transacation
+                pricePerUnit:
+                  type: number
+                  description: Price per quantityUnit for the Transacation
+                totalPrice:
+                  type: number
+                  description: Total Price for the Transacation
+                currency:
+                  type: string
+                  description: Price's currency formatted as rp
+                isOfflineTransaction:
+                  type: boolean
+                  description: offline (with picutre upload) or online (i.e in person)
+                offlineTransactionProofUrl:
+                  type: string
+                  description: Base64-encoded image used as proof for offline transactions. isOfflineTransaction should be true.
+                unilateralyDeclared:
+                  type: boolean
+                  description: Whether the transaction was unilaterally declared by the buyer.
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/schemas-Transaction"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: BuyerTransactionController
+  /buyer/v1.0/transactions:
+    get:
+      tags:
+        - Buyer App
+      description: Get all Transactions from a buyer.
+      operationId: getBuyerTransactions
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+        - name: transactionType
+          in: query
+          description: Transaction context/type to filter the list
+          required: false
+          schema:
+            type: string
+            enum:
+              - crop_purchase
+              - inkind_contribution_distribution
+        - name: query
+          in: query
+          description: searching transactions for farmer name, product name or pos name
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: fitlering transactions by status
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum:
+                - pending
+                - completed
+                - cancelled
+                - declared
+          style: form
+          explode: true
+        - name: limit
+          in: query
+          description: Max number of transactions returned per page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 200
+        - name: cursor
+          in: query
+          description: Cursor token returned by previous response (X-Next-Cursor)
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/schemas-PaginatedTransactionsResponse"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: BuyerTransactionController
+  /buyer/v1.0/farmers/{farmerExternalId}/metrics:
+    get:
+      tags:
+        - Buyer App
+      description: Get aggregate transaction metrics between the authenticated Local Buyer and a given Farmer (all time).
+      operationId: getFarmerMetrics
+      parameters:
+        - name: farmerExternalId
+          in: path
+          required: true
+          description: External UUID of the farmer
+          schema:
+            type: string
+        - name: transactionType
+          in: query
+          description: Transaction context/type to filter the list
+          required: false
+          schema:
+            type: string
+            enum:
+              - crop_purchase
+              - inkind_contribution_distribution
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposed
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FarmerMetrics"
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: BuyerTransactionController
+  /buyer/v1.0/transactions/export:
+    get:
+      tags:
+        - Buyer App
+      description: Export transactions or in kinds as an Excel file.
+      operationId: exportTransactions
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposes
+          schema:
+            type: string
+        - name: transactionType
+          in: query
+          description: Transaction context/type to filter the list
+          required: false
+          schema:
+            type: string
+            enum:
+              - crop_purchase
+              - inkind_contribution_distribution
+      responses:
+        "200":
+          description: Excel file
+          content:
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        "403":
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ForbiddenResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: BuyerTransactionController
+  /buyer/v1.0/reporter:
+    get:
+      tags:
+        - Buyer App
+      description: Create a Metabase iframe URL for the Local Buyer reporting dashboard
+      operationId: createBuyerMetabaseSignedToken
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposes
+          schema:
+            type: string
+        - name: dashboard
+          in: query
+          description: Dashboard name (ex "report-for-local-buyers")
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: string
+                    description: Metabase iframe URL
+                    example: https://dashboard.reporting.sutti.app/embed/dashboard/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: ReportController
+  /buyer/v1.0/pointsOfSale/{pointOfSaleId}/products/{productId}/prices:
+    get:
+      tags:
+        - Buyer App
+      description: Get one product's prices for a given point of sale.
+      operationId: getProductPrices
+      parameters:
+        - name: pointOfSaleId
+          in: path
+          description: Point of sale id to query its prices.
+          required: true
+          schema:
+            type: integer
+        - name: productId
+          in: path
+          description: Product id to query its prices.
+          required: true
+          schema:
+            type: integer
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposes
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Price"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFoundResponse"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: PriceController
+    post:
+      tags:
+        - Buyer App
+      description: Create or update a product price for a given point of sale.
+      operationId: upsertProductPrice
+      parameters:
+        - name: pointOfSaleId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposes
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: Price id. If included, the existing price will be updated. If not included, a new price will be created.
+                value:
+                  type: number
+                currency:
+                  type: string
+                startDate:
+                  type: string
+                  nullable: true
+                endDate:
+                  type: string
+                  nullable: true
+                program:
+                  type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: PriceController
+      x-codegen-request-body-name: priceData
+    delete:
+      tags:
+        - Buyer App
+      description: Delete one product price.
+      operationId: deleteProductPrice
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: Price id to delete
+          schema:
+            type: integer
+        - name: pointOfSaleId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposes
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: PriceController
+  /buyer/v1.0/notification/sendMessageToParticipants:
+    post:
+      tags:
+        - Buyer App
+      description: Send a SIMPLE_MESSAGE to a list of participants
+      operationId: sendMessageToParticipants
+      parameters:
+        - name: jwtPayload
+          in: header
+          description: JWT payload - For generator purposes
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - participantExternalIds
+                - messageContent
+              properties:
+                participantExternalIds:
+                  description: List of participants externalIds (User.externalId)
+                  type: array
+                  minItems: 1
+                  items:
+                    type: string
+                messageContent:
+                  type: string
+                  minLength: 1
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ConfirmationMessage"
+        default:
+          description: Error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+      x-swagger-roles:
+        - LOCAL_BUYER
+      x-swagger-router-controller: NotificationsController
+  /swagger:
+    x-swagger-pipe: swagger_raw
+components:
+  securitySchemes:
+    Bearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ErrorResponse:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+    ConfirmationMessage:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+      description: Send a confirmation string
+      example:
+        message: message
+    UserInfo:
+      type: object
+      properties:
+        userId:
+          type: string
+        programId:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phoneNumber:
+          type: string
+        smsOptedout:
+          type: boolean
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        district:
+          type: string
+        subdistrict:
+          type: string
+        userRoles:
+          type: array
+          items:
+            type: string
+          description: Roles set to the user. Farmers have this role set to 'PARTICIPANT' when enrolled by back office. Read-only.
+        firstAccessDate:
+          type: string
+          format: date-time
+          description: First access date to the mobile app by this user. Read-only.
+        lastAccessDate:
+          type: string
+          format: date-time
+          description: Last access date to the mobile app by this user. Read-only.
+        enrollDate:
+          type: string
+          description: Date recorded when user is created in back office. Read-only.
+        accountDisabled:
+          type: boolean
+          description: This user does not appear in farmer list when this field is set to true. So it is a "write-only" field for the instructor.
+        accountExcludedFromMonitoring:
+          type: boolean
+          description: This user does not appear in Reporting Dashboard when this field is set to true. So it is a "write-only" field for the instructor.
+        photo:
+          type: string
+          description: base-64 encoded picture of the user, e.g "data:image/png;base64, iVBORw0KGgoA..."
+          nullable: true
+        photoFilename:
+          type: string
+          description: URL pointing to the picture of the user
+          nullable: true
+        nationalIdNumber:
+          type: string
+          nullable: true
+      description: Information about user, returned when authentication succeeds.
+    UserInfoWithToken:
+      description: Bearer token returned upon participant identification, along with other user information.
+      allOf:
+        - $ref: "#/components/schemas/UserInfo"
+        - type: object
+          properties:
+            token:
+              type: string
+    ForbiddenResponse:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+      description: Send a not forbidden message
+      example:
+        message: message
+    NotFoundResponse:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+      description: Send a not found message
+      example:
+        message: message
+    BooleanNumber:
+      type: number
+      enum:
+        - 1
+        - 0
+      description: 0 for false and 1 for true, used in database
+    ProgramConfiguration:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        configs:
+          type: object
+          properties:
+            mainCommodity:
+              type: string
+            favicon:
+              type: string
+            logoSmall:
+              type: string
+            logoLarge:
+              type: string
+            welcomeSplashIcon:
+              type: string
+            timeZone:
+              type: string
+            pricesCheckingHour:
+              type: string
+            notificationsSendingHour:
+              type: string
+            posFarmerAssociationHour:
+              type: string
+            languages:
+              type: array
+              items:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  name:
+                    type: string
+                  flag:
+                    type: string
+            defaultLanguage:
+              type: string
+            phonePrefix:
+              type: string
+            priceLocale:
+              type: string
+            modules:
+              type: array
+              items:
+                type: string
+            addCourses:
+              type: string
+            fontFamily:
+              type: string
+            palette:
+              type: object
+            country:
+              type: string
+            districts:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+            subdistricts:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+            loginScreen:
+              type: object
+              properties:
+                enrollmentUrl:
+                  type: string
+                forgotNumberUrl:
+                  type: string
+            splashScreens:
+              type: array
+              items:
+                type: object
+                properties:
+                  key:
+                    type: string
+                  img:
+                    type: string
+      description: Program's configuration
+    ProgramManifest:
+      type: object
+      properties:
+        short_name:
+          type: string
+        name:
+          type: string
+        icons:
+          type: array
+        start_url:
+          type: string
+        id:
+          type: string
+        display:
+          type: string
+        background_color:
+          type: string
+        theme_color:
+          type: string
+        scope:
+          type: string
+    DocDetails:
+      required:
+        - slug
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        slug:
+          type: string
+        imageUrl:
+          type: string
+        order:
+          type: integer
+      description: Details and identity of a course (or a chapter) in the CMS (icon, title…)
+    ChatGroupDetails:
+      type: object
+      properties:
+        url:
+          type: string
+          description: ""
+          nullable: true
+        provider:
+          type: string
+          description: ""
+          nullable: true
+      description: Object that describes details of a chat group in a cohort course
+    CourseDoc:
+      description: Details of a course, along with the details of its (ordered) chapters
+      allOf:
+        - $ref: "#/components/schemas/DocDetails"
+        - type: object
+          properties:
+            chapters:
+              type: array
+              items:
+                $ref: "#/components/schemas/DocDetails"
+            summary:
+              type: string
+            chatGroupDetails:
+              $ref: "#/components/schemas/ChatGroupDetails"
+    SectionContent:
+      description: Details of a Section, and HTML content of a section
+      allOf:
+        - $ref: "#/components/schemas/DocDetails"
+        - type: object
+          properties:
+            content:
+              type: string
+    InstructorDetails:
+      type: object
+      properties:
+        photo:
+          type: string
+        photoFilename:
+          type: string
+        name:
+          type: string
+      description: Photo and name of an instructor
+    MediaDetails:
+      required:
+        - mediaUrl
+      type: object
+      properties:
+        sectionId:
+          type: string
+        mediaUrl:
+          type: string
+      description: Media location, along with the section it belongs to.
+    Answer:
+      type: object
+      properties:
+        cmsId:
+          type: string
+        label:
+          type: string
+      description: Describes a possible answer for a closed question
+    Question:
+      type: object
+      properties:
+        cmsId:
+          type: string
+        title:
+          type: string
+        answerType:
+          type: string
+          description: Could be one of :'radio','checkbox','dropdown','text','number'
+        label:
+          type: string
+        order:
+          type: integer
+        optional:
+          type: boolean
+          description: Set to true if answering may be skipped.
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Answer"
+      description: Describes a question, along with its list of possible answers, if relevant
+    Survey:
+      type: object
+      properties:
+        cmsId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Question"
+      description: Describes a survey related to a course, along with its list of questions
+    SurveyResult:
+      type: object
+      properties:
+        order:
+          type: integer
+          description: used for sales transactions survey hack only
+        questionCmsId:
+          type: string
+        inputDate:
+          type: string
+          description: date of user input (UTC stringified date-time)
+        answer:
+          type: string
+          description: JSON string containing cms Id (single or array) of answer(s) to a question, or a textual string answer
+      description: User inputs entered during a survey collect
+    Coordinates:
+      type: object
+      nullable: true
+      properties:
+        type:
+          type: string
+          description: type of GEOJSON coordinates.
+        coordinates:
+          type: array
+          items:
+            type: number
+            description: array of coordinates (longitude, latitude).
+    Notification:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Read-only.
+        receiver:
+          type: integer
+          description: Id from the receiver to send this notification to.
+        type:
+          type: string
+          description: Type of notification (for example "price_change")
+        status:
+          type: string
+          description: Status of notification (for example "to send" or "sent")
+        level:
+          type: string
+          description: Level of notification (for example "alert")
+        title:
+          type: string
+          description: Title of the notification
+        body:
+          type: string
+          description: Body of the notification (json string)
+        creationDate:
+          type: string
+          description: The date when this notification was created
+        archived:
+          $ref: "#/components/schemas/BooleanNumber"
+          description: If the notification has been archived
+        sentDate:
+          type: string
+          description: The date when this notification was sent as push notification
+      description: Object describing Notification's details, when creating, updating and retrieving notification. Read-only fields are aimed to display only, and should not be sent on update/create.
+    Buyer:
+      description: Information about buyer.
+      type: object
+      properties:
+        externalId:
+          type: string
+          description: External UUID of the buyer
+        programId:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        photoUrl:
+          nullable: true
+          type: string
+    Price:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Read-only. Returned at price creation
+        product:
+          type: integer
+          description: Id from the product which is linked to this price.
+        pointOfSale:
+          type: integer
+          description: Id from the point of sale attached to this price.
+        value:
+          type: number
+          description: Price's amount formatted as '00.00'
+        currency:
+          type: string
+          description: Price's currency formatted as 'rp'
+        startDate:
+          type: string
+          nullable: true
+          description: The date when product's price is officially set to this value
+        endDate:
+          type: string
+          nullable: true
+          description: The date when this price is unset for a product
+        creationDate:
+          type: string
+          description: The date when this price was create
+        enabled:
+          type: integer
+          description: 0 if the price has already been set and is no longer available at this date, else 1
+      description: Object describing Price's details, when creating, updating and listing prices. Read-only fields are aimed to display only, and should not be sent on update/create.
+    Transaction:
+      description: Information about Transaction.
+      type: object
+      properties:
+        id:
+          type: integer
+        externalId:
+          type: string
+          nullable: true
+        transactionType:
+          type: string
+          enum:
+            - crop_purchase
+            - inkind_contribution_distribution
+          description: Transaction context/type
+        pointOfSale:
+          type: object
+          properties:
+            id:
+              type: integer
+            program:
+              type: integer
+            name:
+              type: string
+            description:
+              type: string
+            gpsPoint:
+              $ref: "#/components/schemas/Coordinates"
+        localBuyer:
+          $ref: "#/components/schemas/Buyer"
+        farmer:
+          $ref: "#/components/schemas/UserInfo"
+        product:
+          type: object
+          description: Information about product
+          properties:
+            id:
+              type: number
+            name:
+              type: string
+            description:
+              type: string
+            quantityUnit:
+              type: string
+            price:
+              type: array
+              items:
+                $ref: "#/components/schemas/Price"
+        quantityUnit:
+          type: string
+        quantity:
+          type: number
+        pricePerUnit:
+          type: number
+        totalPrice:
+          type: number
+        currency:
+          type: string
+        offlineTransactionProofUrl:
+          type: string
+          nullable: true
+        isOfflineTransaction:
+          type: boolean
+        transactionCreatedOn:
+          type: string
+        transactionCompletedOn:
+          type: string
+          nullable: true
+        transactionCancelledOn:
+          type: string
+          nullable: true
+        transactionStatus:
+          type: string
+          enum:
+            - pending
+            - completed
+            - cancelled
+            - declared
+        downloadTransactionReceipt:
+          type: string
+          format: uri
+          nullable: true
+          description: >
+            Signed URL to download the transaction receipt. For offline transactions, this points to the proof image. For online transactions, this points to a generated PDF.
+
+    PaginatedTransactionsResponse:
+      type: object
+      required:
+        - transactions
+        - meta
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Transaction"
+        meta:
+          type: object
+          required:
+            - limit
+            - hasNext
+          properties:
+            limit:
+              type: integer
+            hasNext:
+              type: boolean
+            nextCursor:
+              type: string
+              nullable: true
+    TransactionUpdateRequest:
+      type: object
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          enum:
+            - approve
+            - cancel
+          description: Participant action that drives the transaction status update.
+        notificationId:
+          type: integer
+          description: Notification id used to update the existing notification body.
+    TransactionUpdateResponse:
+      type: object
+      required:
+        - id
+        - transactionStatus
+      properties:
+        id:
+          type: integer
+        transactionStatus:
+          type: string
+          enum:
+            - pending
+            - completed
+            - cancelled
+            - declared
+        transactionCompletedOn:
+          type: string
+          nullable: true
+          format: date-time
+        transactionCancelledOn:
+          type: string
+          nullable: true
+          format: date-time
+    Gender:
+      type: string
+      description: Male, Female or Other
+      enum:
+        - M
+        - F
+        - O
+    FarmerInfo:
+      description: Gathers user and farmer information
+      allOf:
+        - $ref: "#/components/schemas/UserInfo"
+        - type: object
+          properties:
+            nationality:
+              type: string
+            gender:
+              $ref: "#/components/schemas/Gender"
+            preferredLanguage:
+              type: string
+            yearOfBirth:
+              type: integer
+              nullable: true
+            proofOfId:
+              type: string
+              nullable: true
+            proofOfIdFilename:
+              type: string
+              nullable: true
+            profession:
+              type: string
+              nullable: true
+            postalAddress:
+              type: string
+              nullable: true
+            zipCode:
+              type: string
+              nullable: true
+            country:
+              type: string
+              nullable: true
+            city:
+              type: string
+              nullable: true
+            subdistrict:
+              type: string
+            district:
+              type: string
+            relationshipToFarm:
+              type: string
+              description: Should be 'Owner' or 'Tenant'
+              nullable: true
+            distanceToTrainingCenter:
+              type: number
+              nullable: true
+            relatives:
+              type: array
+              nullable: true
+              items:
+                type: object
+                properties:
+                  relativeType:
+                    type: string
+                  firstName:
+                    type: string
+                  gender:
+                    oneOf:
+                      - type: object
+                        nullable: true
+                      - $ref: "#/components/schemas/Gender"
+                  yearOfBirth:
+                    type: integer
+                    nullable: true
+                  averageWeeklyHoursOfWorkInFarm:
+                    nullable: true
+                    type: number
+            partnerFirstName:
+              type: string
+              nullable: true
+            participantCode:
+              type: string
+              nullable: true
+            partnerGender:
+              oneOf:
+                - type: object
+                  nullable: true
+                - $ref: "#/components/schemas/Gender"
+            partnerYearOfBirth:
+              type: integer
+              nullable: true
+            otherFamilyMembersTotalWeeklyHoursOfWorkInFarm:
+              type: number
+              nullable: true
+            partnerAverageWeeklyHoursOfWorkInFarm:
+              type: number
+              nullable: true
+    DuplicatedResponse:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+      description: Duplicated Content
+      example:
+        message: message
+    FarmerMediaInfo:
+      description: Gathers user and farmer information
+      allOf:
+        - type: object
+          properties:
+            presignedURL:
+              type: string
+    Service:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Read-only. Returned at service creation
+        program:
+          type: integer
+          description: program identifier (must be positive)
+        name:
+          type: string
+          description: service's name
+        locale:
+          type: string
+          description: text language (name and description)
+        description:
+          type: string
+          description: service's description
+        icon:
+          type: string
+          description: url of the displayed image
+        url:
+          type: string
+          description: service's url
+        enabled:
+          $ref: "#/components/schemas/BooleanNumber"
+      description: Object describing Service's details, when creating, updating and listing services.
+    RepresentedBy:
+      type: object
+      nullable: true
+      description: Object that describes details of someone who represents farmer during a session, when creating, updating and listing attendance.
+      properties:
+        firstname:
+          type: string
+        lastname:
+          type: string
+        yearOfBirth:
+          type: number
+        gender:
+          type: string
+          enum:
+            - M
+            - F
+            - O
+        representingQuality:
+          type: string
+          enum:
+            - family
+            - employee
+            - other
+    schemas-UserInfo:
+      type: object
+      properties:
+        externalId:
+          type: string
+          description: Public external user identifier (EUUID)
+        programId:
+          type: number
+        firstName:
+          type: string
+        lastName:
+          type: string
+    schemas-UserInfoWithToken:
+      description: Bearer token returned upon participant identification, along with other user information.
+      allOf:
+        - $ref: "#/components/schemas/schemas-UserInfo"
+        - type: object
+          properties:
+            token:
+              type: string
+    PointOfSale:
+      type: object
+      properties:
+        id:
+          type: integer
+        program:
+          type: integer
+        name:
+          type: string
+        description:
+          type: string
+        gpsPoint:
+          $ref: "#/components/schemas/Coordinates"
+    Farmer:
+      description: Information about farmer, returned when authentication succeeds.
+      type: object
+      properties:
+        externalId:
+          type: string
+          description: External UUID of the farmer
+        programId:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        photoUrl:
+          nullable: true
+          type: string
+    PaginatedFarmersResponse:
+      type: object
+      required:
+        - farmers
+        - meta
+      properties:
+        farmers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Farmer"
+        meta:
+          type: object
+          required:
+            - limit
+            - hasNext
+          properties:
+            limit:
+              type: integer
+            hasNext:
+              type: boolean
+            nextCursor:
+              type: string
+              nullable: true
+    Product:
+      description: Information about product
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+        description:
+          type: string
+        quantityUnit:
+          type: string
+        price:
+          type: array
+          items:
+            $ref: "#/components/schemas/Price"
+        type:
+          type: string
+          enum:
+            - crop
+            - inkind_contribution
+    schemas-Transaction:
+      description: Information about Transaction.
+      type: object
+      properties:
+        id:
+          type: integer
+        externalId:
+          type: string
+          nullable: true
+        transactionType:
+          type: string
+          enum:
+            - crop_purchase
+            - inkind_contribution_distribution
+        pointOfSale:
+          $ref: "#/components/schemas/PointOfSale"
+        localBuyer:
+          $ref: "#/components/schemas/schemas-UserInfo"
+        farmer:
+          $ref: "#/components/schemas/Farmer"
+        product:
+          $ref: "#/components/schemas/Product"
+        quantityUnit:
+          type: string
+        quantity:
+          type: number
+        pricePerUnit:
+          type: number
+        totalPrice:
+          type: number
+        currency:
+          type: string
+        offlineTransactionProofUrl:
+          type: string
+          nullable: true
+        isOfflineTransaction:
+          type: boolean
+        transactionCreatedOn:
+          type: string
+        transactionCompletedOn:
+          type: string
+          nullable: true
+        transactionCancelledOn:
+          type: string
+          nullable: true
+        transactionStatus:
+          type: string
+          enum:
+            - pending
+            - completed
+            - cancelled
+            - declared
+        downloadTransactionReceipt:
+          type: string
+          format: uri
+          nullable: true
+          description: >
+            Signed URL to download the transaction receipt. For offline transactions, this points to the proof image. For online transactions, this points to a generated PDF.
+
+    schemas-PaginatedTransactionsResponse:
+      type: object
+      required:
+        - transactions
+        - meta
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: "#/components/schemas/schemas-Transaction"
+        meta:
+          type: object
+          required:
+            - limit
+            - hasNext
+          properties:
+            limit:
+              type: integer
+            hasNext:
+              type: boolean
+            nextCursor:
+              type: string
+              nullable: true
+    FarmerMetrics:
+      type: object
+      properties:
+        transactionsCount:
+          type: integer
+        volumeTotal:
+          type: number
+        amountTotal:
+          type: number
